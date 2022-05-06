@@ -22,10 +22,13 @@ Date::Date(Date const& other) {
 
 
 Date& Date::operator=(Date const& other) {
-    this->day = other.day;
-    this->month = other.month;
-    this->year = other.year;
-    valid = validate();
+    if (this != &other) {
+        this->day = other.day;
+        this->month = other.month;
+        this->year = other.year;
+        valid = validate();
+    }
+    return *this;
 }
 
 
