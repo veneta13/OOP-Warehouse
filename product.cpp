@@ -78,6 +78,16 @@ void Product::setComment(char const* _comment) {
 }
 
 
+void Product::setQuantity(int _quantity) {
+    quantity = _quantity;
+}
+
+
+void Product::setPlacement(Placement _placement) {
+    placement = _placement;
+}
+
+
 bool Product::operator==(Product const& other) {
     if (hasSameName(other) && (expirationDate == other.expirationDate)) {
         return true;
@@ -121,5 +131,25 @@ char const* Product::getManufacturer() const {
 
 char const* Product::getComment() const {
     return comment;
+}
+
+
+int Product::getQuantity() const {
+    return quantity;
+}
+
+
+Date Product::getExpirationDate() const {
+    return expirationDate;
+}
+
+
+Date Product::getStockedDate() const {
+    return stockedDate;
+}
+
+
+Placement Product::getPlacement() const {
+    return placement;
 }
  

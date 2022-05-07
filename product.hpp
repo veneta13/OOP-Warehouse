@@ -17,10 +17,6 @@ class Product {
 
     Placement placement;
 
-    void setName(char const* _name);
-    void setManufacturer(char const* _manufacturer);
-    void setComment(char const* _comment);
-
 public:
     Product();
     Product(char* name, char* manufacturer, char* comment, int quantity, Date expirationDate, Date stockedDate, Placement placement);
@@ -33,9 +29,19 @@ public:
     bool operator<(Product const& other);
     bool hasSameName(Product const& other);
 
+    void setName(char const* _name);
+    void setManufacturer(char const* _manufacturer);
+    void setComment(char const* _comment);
+    void setQuantity(int _quantity);
+    void setPlacement(Placement _placement);
+
     char const* getName() const;
     char const* getManufacturer() const;
     char const* getComment() const;
+    int getQuantity() const;
+    Date getExpirationDate() const;
+    Date getStockedDate() const;
+    Placement getPlacement() const;
 };
 
 #endif
