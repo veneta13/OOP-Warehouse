@@ -107,4 +107,19 @@ bool Product::hasSameName(Product const& other) {
     }
     return false;
 }
+
+
+char const* Product::getName() const {
+    return name;
+}
+
+
+char const* Product::getManufacturer() const {
+    return manufacturer;
+}
+
+
+char const* Product::getComment() const {
+    return comment;
+}
  

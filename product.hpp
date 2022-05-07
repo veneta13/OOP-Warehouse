@@ -32,6 +32,10 @@ public:
     bool operator>(Product const& other);
     bool operator<(Product const& other);
     bool hasSameName(Product const& other);
+
+    char const* getName() const;
+    char const* getManufacturer() const;
+    char const* getComment() const;
 };
 
 #endif
