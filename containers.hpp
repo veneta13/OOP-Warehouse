@@ -21,6 +21,7 @@ public:
 
 class Shelf : public Container {
     Product* products;
+    
     void copyProducts(Product* others);
 
 public:
@@ -50,6 +51,7 @@ public:
 
 class Section : public Container {
     Shelf* shelves;
+
     void copyShelves(Shelf* others);
 
 public:
@@ -72,7 +74,9 @@ public:
 
 class Warehouse : public Container {
     Section* sections;
+
     void copySections(Section* others);
+    int sortAndCount(DynArray<Product*> products);
 
 public:
     Warehouse();

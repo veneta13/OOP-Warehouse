@@ -267,6 +267,27 @@ void Warehouse::copySections(Section* others) {
 }
 
 
+int Warehouse::sortAndCount(DynArray<Product*> products) {
+    int quantitySum = 0;
+    for (int i = 0; i < products.size() - 1; i++) 
+    { 
+        int minIndex = i; 
+        for (int j = i + 1; j < products.size(); j++) {
+            if (products[j] < products[minIndex]) {
+                minIndex = j; 
+            }
+        }
+
+        Product* temp = products[i];
+        products[i] = products[minIndex];
+        products[minIndex] = temp;
+        quantitySum += products[i]->getQuantity();
+    }
+    quantitySum += products[products.size()-1]->getQuantity();
+    return quantitySum;
+}
+
+
 void Warehouse::list(std::ostream& out) {
     for (int i = 0; i < capacity; i++) {
         sections[i].list();
