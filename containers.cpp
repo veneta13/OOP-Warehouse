@@ -26,7 +26,7 @@ int Container::getCapacity() const {
     return capacity;
 }
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Shelf::Shelf() : Container(0) {
     products = nullptr;
@@ -73,6 +73,25 @@ Product* Shelf::findByName(char const* name) {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getName() != nullptr && strcmp(products[i].getName(), name) == 0) {
             return &products[i];
+        }
+    }
+    return nullptr;
+}
+
+
+void Shelf::findAllByName(const char* name, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        if (products[i].getName() != nullptr && strcmp(products[i].getName(), name) == 0) {
+            results.push(&products[i]);
+        }
+    }
+}
+
+
+void Shelf::findAllByDate(Date date, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        if (products[i].getQuantity() != 0 && products[i].getExpirationDate() <= date) {
+            results.push(&products[i]);
         }
     }
 }
@@ -123,7 +142,7 @@ int Shelf::countProduct(char const* name) {
     return counter;
 }
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Section::Section() : Container(0) {
     shelves = nullptr;
@@ -171,13 +190,41 @@ Shelf* Section::operator[](int index) const {
 }
 
 
+Shelf* Section::at(int index) const {
+    return &shelves[index];
+}
+
+
+Product* Section::findByName(char const* name) {
+    Product* found = nullptr;
+    for (int i = 0; i < capacity && !found; i++) {
+        found = shelves[i].findByName(name);
+    }
+    return found;
+}
+
+
+void Section::findAllByName(const char* name, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        shelves[i].findAllByName(name, results);
+    }
+}
+
+
+void Section::findAllByDate(Date date, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        shelves[i].findAllByDate(date, results);
+    }
+}
+
+
 void Section::list() {
     for (int i = 0; i < capacity; i++) {
         shelves[i].list();
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Warehouse::Warehouse() : Container(0) {
     sections = nullptr;

@@ -32,7 +32,10 @@ public:
 
     Product* operator[](int index) const;
     Product* at(int index) const;
+
     Product* findByName(char const* name);
+    void findAllByName(const char* name, DynArray<Product*>& results);
+    void findAllByDate(Date date, DynArray<Product*>& results);
 
     int addProduct(Product product, int index);
     int addProduct(Product product);
@@ -57,8 +60,11 @@ public:
     ~Section();
 
     Shelf* operator[](int index) const;
+    Shelf* at(int index) const;
 
-    Product* find(Product product);
+    Product* findByName(char const* name);
+    void findAllByName(const char* name, DynArray<Product*>& results);
+    void findAllByDate(Date date, DynArray<Product*>& results);
 
     void list();
 };
