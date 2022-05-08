@@ -35,6 +35,7 @@ public:
     Product& at(int index) const;
 
     Product* findByName(char const* name);
+    Product* findEqual(char const* name, Date date);
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
 
@@ -61,6 +62,7 @@ public:
     Shelf& at(int index) const;
 
     Product* findByName(char const* name);
+    Product* findEqual(char const* name, Date date);
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
 
@@ -79,6 +81,10 @@ class Warehouse : public Container {
     void printProducts(std::ostream& out, DynArray<Product*>& products);
     bool insufficientQuantity(std::ostream& out, std::istream& in, int productCount, DynArray<Product*>& products);
 
+    bool addProduct(Product product, int sectionIndex, int shelfIndex, int index);
+    bool addProduct(Product product);
+    void removeProduct(int sectionIndex,int shelfIndex, int index);
+
 public:
     Warehouse();
     Warehouse(int capacity);
@@ -88,14 +94,11 @@ public:
 
     void operator<<(std::ostream& out);
 
+    Product* findEqual(char const* name, Date date);
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
 
-    bool addProduct(Product product, int sectionIndex, int shelfIndex, int index);
-    bool addProduct(Product product);
-
-    void removeProduct(int sectionIndex,int shelfIndex, int index);
-
+    bool insertProduct(Product product);
     bool takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted);
 
     void cleanup(Date const& date);

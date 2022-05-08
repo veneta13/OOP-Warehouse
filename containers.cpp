@@ -79,6 +79,16 @@ Product& Shelf::at(int index) const {
 }
 
 
+Product* Shelf::findEqual(char const* name, Date date) {
+    for (int i = 0; i < capacity; i++) {
+        if ((strcmp(products[i].getName(), name) == 0) && products[i].getExpirationDate() == date) {
+            return &products[i];
+        }
+    }
+    return nullptr;
+}
+
+
 Product* Shelf::findByName(char const* name) {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getName() != nullptr && strcmp(products[i].getName(), name) == 0) {
@@ -179,6 +189,15 @@ Shelf& Section::operator[](int index) const {
 
 Shelf& Section::at(int index) const {
     return shelves[index];
+}
+
+
+Product* Section::findEqual(char const* name, Date date) {
+    Product* found = nullptr;
+    for (int i = 0; i < capacity && !found; i++) {
+        found = shelves[i].findEqual(name, date);
+    }
+    return found;
 }
 
 
@@ -357,6 +376,15 @@ void Warehouse::operator<<(std::ostream& out) {
 }
 
 
+Product* Warehouse::findEqual(char const* name, Date date) {
+    Product* found = nullptr;
+    for (int i = 0; i < capacity && !found; i++) {
+        found = sections[i].findEqual(name, date);
+    }
+    return found;
+}
+
+
 void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
@@ -425,3 +453,21 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
     return true;
 }
 
+
+bool Warehouse::insertProduct(Product product) {
+    Product* found = findEqual(product.getName(), product.getExpirationDate());
+
+    if (found) {
+        Placement p = found->getPlacement();    
+
+        // Place on the same shelf
+        if (sections[p.section, p.shelf].addProduct(product).index != -1) {
+            return true;
+        }
+
+        // TODO
+
+    }
+    
+    return addProduct(product);
+} 
