@@ -1,7 +1,7 @@
 #ifndef __DATE
 #define __DATE
 
-class Date {
+struct Date {
     int day;
     int month;
     int year;
@@ -9,7 +9,6 @@ class Date {
 
     bool validate();
 
-public:
     Date();
     Date(int day, int month, int year);
     Date(Date const& other);

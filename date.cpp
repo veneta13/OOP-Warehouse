@@ -32,7 +32,12 @@ Date& Date::operator=(Date const& other) {
 }
 
 
-Date::~Date() {}
+Date::~Date() {
+    day = 0;
+    month = 0;
+    year = 0;
+    valid = false;
+}
 
 
 bool Date::validate() {
