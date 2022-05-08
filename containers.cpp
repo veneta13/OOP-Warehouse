@@ -236,6 +236,11 @@ Placement Section::addProduct(Product product) {
     return Placement();
 }
 
+
+void Section::removeProduct(int shelfIndex, int index) {
+    shelves[shelfIndex].removeProduct(index);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Warehouse::Warehouse() : Container(0) {
@@ -321,6 +326,21 @@ void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) {
     }
 }
 
+
+bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int productCount, DynArray<Product*>& products) {
+    char response;
+    out << "! Only " << productCount << " products available:\n";
+    printProducts(out, products);
+    out << "\nDo you want to remove anyway? y/n";
+    in.clear();
+    in >> response;
+    if (!response == 'y') { 
+        return false;
+    }
+    return true;
+}
+
+
 void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
@@ -355,6 +375,38 @@ bool Warehouse::addProduct(Product product) {
         }
     }
     return false;
+}
+
+
+void Warehouse::removeProduct(int sectionIndex,int shelfIndex, int index) {
+    sections[sectionIndex].removeProduct(shelfIndex,index);
+}
+
+
+bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted) {
+    DynArray<Product*> products(10);
+    findAllByName(name, products);
+    int productCount = sortAndCount(products);
+
+    if (productCount < wanted && insufficientQuantity(out, in, productCount, products)) {
+        return false;
+    }
+
+    for (int i = 0; i < products.size() && wanted > 0; i++) {
+        Placement p = products[i]->getPlacement();
+        int currentQuantity = products[i]->getQuantity();
+
+        if (wanted >= currentQuantity) {
+            removeProduct(p.section, p.shelf, p.index);
+            wanted -= currentQuantity;
+        }
+        else {
+            sections[p.section][p.shelf][p.index].setQuantity(currentQuantity - wanted);
+            wanted = 0;
+        }
+    }
+    
+    return true;
 }
 
 
