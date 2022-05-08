@@ -307,6 +307,20 @@ int Warehouse::sortAndCount(DynArray<Product*> products) {
 }
 
 
+void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        sections[i].findAllByName(name, results);
+    }
+}
+
+
+void Warehouse::findAllByDate(Date date, DynArray<Product*>& results) {
+    for (int i = 0; i < capacity; i++) {
+        sections[i].findAllByDate(date, results);
+    }
+}
+
+
 bool Warehouse::addProduct(Product product, int sectionIndex, int shelfIndex, int index) {
     if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
         sections[sectionIndex][shelfIndex][index].setPlacement(Placement{sectionIndex, shelfIndex, index});
@@ -331,8 +345,44 @@ bool Warehouse::addProduct(Product product) {
 
 
 void Warehouse::list(std::ostream& out) {
-    for (int i = 0; i < capacity; i++) {
-        sections[i].list();
+    DynArray<char*> listed(10);
+
+    for (int i = 0; i < capacity; i++) { // section counter
+        for (int j = 0; j < sections[i].getCapacity(); j++) { // shelf counter
+            for (int k = 0; k < sections[i][j].getCapacity(); k++) { // index counter
+                bool visited = false;
+                
+                for (int l = 0; l < listed.size(); l++) {
+                    if (strcmp(listed[l], sections[i][j][k].getName()) == 0){
+                        visited = true;
+                        break;
+                    }
+                }
+
+                if (!visited) {
+                    DynArray<Product*> products(10);
+                    findAllByName(sections[i][j][k].getName(), products);
+                    int productCount = sortAndCount(products);
+
+                    out << products[0]->getName() << "\nCOUNT: "
+                        << productCount << "\nDETAILS:\n";
+            
+                    for (int l = 0; l < products.size(); l++) {
+                        out << products[l]->getManufacturer() << " \n "
+                            << products[l]->getPlacement().index << " SHELF "
+                            << products[l]->getPlacement().shelf << " SECTION "
+                            << products[l]->getPlacement().section << "\n EXP:"
+                            << products[l]->getExpirationDate().day << "/"
+                            << products[l]->getExpirationDate().month << "/"
+                            << products[l]->getExpirationDate().year << " STOCK:"
+                            << products[l]->getStockedDate().day << "/"
+                            << products[l]->getStockedDate().month << "/"
+                            << products[l]->getStockedDate().year << "\nNOTES:"
+                            << products[l]->getComment() << "\n";
+                    }
+                }
+            }
+        }
     }
 }
 

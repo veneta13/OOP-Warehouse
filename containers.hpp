@@ -90,10 +90,12 @@ public:
 
     Section& operator[](int index) const;
 
-
     bool addProduct(Product product, int sectionIndex, int shelfIndex, int index);
     bool addProduct(Product product);
     bool removeProduct(char const* name, int capacity);
+
+    void findAllByName(const char* name, DynArray<Product*>& results);
+    void findAllByDate(Date date, DynArray<Product*>& results);
 
     void list(std::ostream& out);
     void cleanup(Date const& date);
