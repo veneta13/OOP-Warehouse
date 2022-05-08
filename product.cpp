@@ -92,6 +92,21 @@ void Product::setPlacement(Placement _placement) {
 }
 
 
+void Product::setIndex(int _index) {
+    placement.index = _index;
+}
+
+
+void Product::setShelf(int _shelf) {
+    placement.shelf = _shelf;
+}
+
+
+void Product::setSection(int _section) {
+    placement.section = _section;
+}
+
+
 bool Product::operator==(Product const& other) {
     if (hasSameName(other) && (expirationDate == other.expirationDate)) {
         return true;

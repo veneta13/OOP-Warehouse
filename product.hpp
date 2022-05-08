@@ -34,6 +34,9 @@ public:
     void setComment(char const* _comment);
     void setQuantity(int _quantity);
     void setPlacement(Placement _placement);
+    void setIndex(int _index);
+    void setShelf(int _shelf);
+    void setSection(int _section);
 
     char const* getName() const;
     char const* getManufacturer() const;
