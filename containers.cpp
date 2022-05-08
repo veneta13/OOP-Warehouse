@@ -236,13 +236,6 @@ Placement Section::addProduct(Product product) {
     return Placement();
 }
 
-
-void Section::list() {
-    for (int i = 0; i < capacity; i++) {
-        shelves[i].list();
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Warehouse::Warehouse() : Container(0) {
@@ -307,6 +300,27 @@ int Warehouse::sortAndCount(DynArray<Product*> products) {
 }
 
 
+void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) {
+    int productCount = sortAndCount(products);
+
+    out << products[0]->getName() << "\nCOUNT: "
+        << productCount << "\nDETAILS:\n";
+
+    for (int i = 0; i < products.size(); i++) {
+        out << products[i]->getManufacturer() << " \n "
+            << products[i]->getPlacement().index << " SHELF "
+            << products[i]->getPlacement().shelf << " SECTION "
+            << products[i]->getPlacement().section << "\n EXP:"
+            << products[i]->getExpirationDate().day << "/"
+            << products[i]->getExpirationDate().month << "/"
+            << products[i]->getExpirationDate().year << " STOCK:"
+            << products[i]->getStockedDate().day << "/"
+            << products[i]->getStockedDate().month << "/"
+            << products[i]->getStockedDate().year << "\nNOTES:"
+            << products[i]->getComment() << "\n";
+    }
+}
+
 void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
@@ -344,7 +358,7 @@ bool Warehouse::addProduct(Product product) {
 }
 
 
-void Warehouse::list(std::ostream& out) {
+void Warehouse::operator<<(std::ostream& out) {
     DynArray<const char*> listed(10);
 
     for (int i = 0; i < capacity; i++) { // section counter
@@ -363,24 +377,7 @@ void Warehouse::list(std::ostream& out) {
                     listed.push(sections[i][j][k].getName());
                     DynArray<Product*> products(10);
                     findAllByName(sections[i][j][k].getName(), products);
-                    int productCount = sortAndCount(products);
-
-                    out << products[0]->getName() << "\nCOUNT: "
-                        << productCount << "\nDETAILS:\n";
-            
-                    for (int l = 0; l < products.size(); l++) {
-                        out << products[l]->getManufacturer() << " \n "
-                            << products[l]->getPlacement().index << " SHELF "
-                            << products[l]->getPlacement().shelf << " SECTION "
-                            << products[l]->getPlacement().section << "\n EXP:"
-                            << products[l]->getExpirationDate().day << "/"
-                            << products[l]->getExpirationDate().month << "/"
-                            << products[l]->getExpirationDate().year << " STOCK:"
-                            << products[l]->getStockedDate().day << "/"
-                            << products[l]->getStockedDate().month << "/"
-                            << products[l]->getStockedDate().year << "\nNOTES:"
-                            << products[l]->getComment() << "\n";
-                    }
+                    printProducts(out, products);
                 }
             }
         }

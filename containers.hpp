@@ -44,8 +44,6 @@ public:
     void removeProduct(int index);
 
     int countProduct(char const* name);
-
-    void list(std::ostream& out);
 };
 
 
@@ -70,8 +68,6 @@ public:
 
     bool addProduct(Product product, int shelfIndex, int index);
     Placement addProduct(Product product);
-
-    void list();
 };
 
 
@@ -79,6 +75,7 @@ class Warehouse : public Container {
     Section* sections;
 
     void copySections(Section* others);
+    void printProducts(std::ostream& out, DynArray<Product*>& products);
     int sortAndCount(DynArray<Product*> products);
 
 public:
@@ -97,7 +94,7 @@ public:
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
 
-    void list(std::ostream& out);
+    void operator<<(std::ostream& out);
     void cleanup(Date const& date);
 };
 
