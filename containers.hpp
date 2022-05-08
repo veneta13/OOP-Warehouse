@@ -42,8 +42,6 @@ public:
     Placement addProduct(Product product);
 
     void removeProduct(int index);
-
-    int countProduct(char const* name);
 };
 
 
@@ -77,8 +75,8 @@ class Warehouse : public Container {
     Section* sections;
 
     void copySections(Section* others);
-    void printProducts(std::ostream& out, DynArray<Product*>& products);
     int sortAndCount(DynArray<Product*> products);
+    void printProducts(std::ostream& out, DynArray<Product*>& products);
     bool insufficientQuantity(std::ostream& out, std::istream& in, int productCount, DynArray<Product*>& products);
 
 public:
@@ -88,7 +86,10 @@ public:
     Warehouse& operator=(Warehouse const& other);
     ~Warehouse();
 
-    Section& operator[](int index) const;
+    void operator<<(std::ostream& out);
+
+    void findAllByName(const char* name, DynArray<Product*>& results);
+    void findAllByDate(Date date, DynArray<Product*>& results);
 
     bool addProduct(Product product, int sectionIndex, int shelfIndex, int index);
     bool addProduct(Product product);
@@ -97,10 +98,6 @@ public:
 
     bool takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted);
 
-    void findAllByName(const char* name, DynArray<Product*>& results);
-    void findAllByDate(Date date, DynArray<Product*>& results);
-
-    void operator<<(std::ostream& out);
     void cleanup(Date const& date);
 };
 

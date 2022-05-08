@@ -69,6 +69,16 @@ void Shelf::copyProducts(Product* others) {
 }
 
 
+Product& Shelf::operator[](int index) const {
+    return products[index];
+}
+
+
+Product& Shelf::at(int index) const {
+    return products[index];
+}
+
+
 Product* Shelf::findByName(char const* name) {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getName() != nullptr && strcmp(products[i].getName(), name) == 0) {
@@ -97,16 +107,6 @@ void Shelf::findAllByDate(Date date, DynArray<Product*>& results) {
 }
 
 
-Product& Shelf::operator[](int index) const {
-    return products[index];
-}
-
-
-Product& Shelf::at(int index) const {
-    return products[index];
-}
-
-
 bool Shelf::addProduct(Product product, int index) {
     if (products[index].getQuantity() != 0) { return false; }
     products[index] = product;
@@ -127,17 +127,6 @@ Placement Shelf::addProduct(Product product) {
 void Shelf::removeProduct(int index) {
     delete &products[index];
     products[index] = Product();
-}
-
-
-int Shelf::countProduct(char const* name) {
-    int counter = 0;
-    for (int i = 0; i < capacity; i++) {
-        if (strcmp(products[i].getName(), name) == 0) {
-            counter += products[i].getQuantity();
-        }
-    }
-    return counter;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,6 +330,33 @@ bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int pr
 }
 
 
+void Warehouse::operator<<(std::ostream& out) {
+    DynArray<const char*> listed(10);
+
+    for (int i = 0; i < capacity; i++) { // section counter
+        for (int j = 0; j < sections[i].getCapacity(); j++) { // shelf counter
+            for (int k = 0; k < sections[i][j].getCapacity(); k++) { // index counter
+                bool visited = false;
+                
+                for (int l = 0; l < listed.size(); l++) {
+                    if (strcmp(listed[l], sections[i][j][k].getName()) == 0){
+                        visited = true;
+                        break;
+                    }
+                }
+
+                if (!visited) {
+                    listed.push(sections[i][j][k].getName());
+                    DynArray<Product*> products(10);
+                    findAllByName(sections[i][j][k].getName(), products);
+                    printProducts(out, products);
+                }
+            }
+        }
+    }
+}
+
+
 void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
@@ -407,32 +423,5 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
     }
     
     return true;
-}
-
-
-void Warehouse::operator<<(std::ostream& out) {
-    DynArray<const char*> listed(10);
-
-    for (int i = 0; i < capacity; i++) { // section counter
-        for (int j = 0; j < sections[i].getCapacity(); j++) { // shelf counter
-            for (int k = 0; k < sections[i][j].getCapacity(); k++) { // index counter
-                bool visited = false;
-                
-                for (int l = 0; l < listed.size(); l++) {
-                    if (strcmp(listed[l], sections[i][j][k].getName()) == 0){
-                        visited = true;
-                        break;
-                    }
-                }
-
-                if (!visited) {
-                    listed.push(sections[i][j][k].getName());
-                    DynArray<Product*> products(10);
-                    findAllByName(sections[i][j][k].getName(), products);
-                    printProducts(out, products);
-                }
-            }
-        }
-    }
 }
 
