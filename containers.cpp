@@ -345,7 +345,7 @@ bool Warehouse::addProduct(Product product) {
 
 
 void Warehouse::list(std::ostream& out) {
-    DynArray<char*> listed(10);
+    DynArray<const char*> listed(10);
 
     for (int i = 0; i < capacity; i++) { // section counter
         for (int j = 0; j < sections[i].getCapacity(); j++) { // shelf counter
@@ -360,6 +360,7 @@ void Warehouse::list(std::ostream& out) {
                 }
 
                 if (!visited) {
+                    listed.push(sections[i][j][k].getName());
                     DynArray<Product*> products(10);
                     findAllByName(sections[i][j][k].getName(), products);
                     int productCount = sortAndCount(products);
