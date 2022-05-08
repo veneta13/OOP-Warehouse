@@ -97,32 +97,30 @@ void Shelf::findAllByDate(Date date, DynArray<Product*>& results) {
 }
 
 
-Product* Shelf::operator[](int index) const {
-    return index < capacity ? &products[index] : nullptr;
+Product& Shelf::operator[](int index) const {
+    return products[index];
 }
 
 
-Product* Shelf::at(int index) const {
-    return &products[index];
+Product& Shelf::at(int index) const {
+    return products[index];
 }
 
 
-int Shelf::addProduct(Product product, int index) {
-    if (products[index].getQuantity() != 0) { return -1; }
-    product.setIndex(index);
+bool Shelf::addProduct(Product product, int index) {
+    if (products[index].getQuantity() != 0) { return false; }
     products[index] = product;
-    return index;
+    return true;
 }
 
 
-int Shelf::addProduct(Product product) {
+Placement Shelf::addProduct(Product product) {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() != 0) { continue; }
         products[i] = product;
-        products[i].setIndex(i);
-        return i;
+        return Placement({0, 0, i});
     }
-    return -1;
+    return Placement();
 }
 
 
@@ -185,13 +183,13 @@ void Section::copyShelves(Shelf* others) {
 }
 
 
-Shelf* Section::operator[](int index) const {
-    return index < capacity ? &shelves[index] : nullptr;
+Shelf& Section::operator[](int index) const {
+    return shelves[index];
 }
 
 
-Shelf* Section::at(int index) const {
-    return &shelves[index];
+Shelf& Section::at(int index) const {
+    return shelves[index];
 }
 
 
@@ -215,6 +213,27 @@ void Section::findAllByDate(Date date, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         shelves[i].findAllByDate(date, results);
     }
+}
+
+
+bool Section::addProduct(Product product, int shelfIndex, int index) {
+    if (shelves[shelfIndex].addProduct(product, index)) {
+        return true;
+    }
+    return false;
+}
+
+
+Placement Section::addProduct(Product product) {
+    for (int i = 0; i < capacity; i++) {
+        Placement p = shelves[i].addProduct(product);
+
+        if (p.index != -1) {
+            p.shelf = i;
+            return p;
+        }
+    }
+    return Placement();
 }
 
 
@@ -285,6 +304,29 @@ int Warehouse::sortAndCount(DynArray<Product*> products) {
     }
     quantitySum += products[products.size()-1]->getQuantity();
     return quantitySum;
+}
+
+
+bool Warehouse::addProduct(Product product, int sectionIndex, int shelfIndex, int index) {
+    if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
+        sections[sectionIndex][shelfIndex][index].setPlacement(Placement{sectionIndex, shelfIndex, index});
+        return true;
+    }
+    return false;
+}
+
+
+bool Warehouse::addProduct(Product product) {
+    for (int i = 0; i < capacity; i++) {
+        Placement p = sections[i].addProduct(product);
+
+        if (p.shelf != -1) {
+            p.section = i;
+            sections[p.section][p.shelf][p.index].setPlacement(p);
+            return true;
+        }
+    }
+    return false;
 }
 
 

@@ -21,7 +21,7 @@ public:
 
 class Shelf : public Container {
     Product* products;
-    
+
     void copyProducts(Product* others);
 
 public:
@@ -31,15 +31,15 @@ public:
     Shelf& operator=(Shelf const& other);
     ~Shelf();
 
-    Product* operator[](int index) const;
-    Product* at(int index) const;
+    Product& operator[](int index) const;
+    Product& at(int index) const;
 
     Product* findByName(char const* name);
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
 
-    int addProduct(Product product, int index);
-    int addProduct(Product product);
+    bool addProduct(Product product, int index);
+    Placement addProduct(Product product);
 
     void removeProduct(int index);
 
@@ -61,12 +61,15 @@ public:
     Section& operator=(const Section& other);
     ~Section();
 
-    Shelf* operator[](int index) const;
-    Shelf* at(int index) const;
+    Shelf& operator[](int index) const;
+    Shelf& at(int index) const;
 
     Product* findByName(char const* name);
     void findAllByName(const char* name, DynArray<Product*>& results);
     void findAllByDate(Date date, DynArray<Product*>& results);
+
+    bool addProduct(Product product, int shelfIndex, int index);
+    Placement addProduct(Product product);
 
     void list();
 };
@@ -85,8 +88,10 @@ public:
     Warehouse& operator=(Warehouse const& other);
     ~Warehouse();
 
-    Section* operator[](int index) const;
+    Section& operator[](int index) const;
 
+
+    bool addProduct(Product product, int sectionIndex, int shelfIndex, int index);
     bool addProduct(Product product);
     bool removeProduct(char const* name, int capacity);
 
