@@ -54,6 +54,10 @@ Product::~Product() {
     manufacturer = nullptr;
     delete[] comment;
     comment = nullptr;
+    quantity = 0;
+    delete &expirationDate;
+    delete &stockedDate;
+    placement = Placement();
 }
 
 
