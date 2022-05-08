@@ -101,7 +101,7 @@ public:
     bool insertProduct(Product product);
     bool takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted);
 
-    void cleanup(Date const& date);
+    void cleanup(std::ostream& file, Date date);
 };
 
 #endif

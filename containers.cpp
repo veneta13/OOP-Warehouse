@@ -314,13 +314,10 @@ int Warehouse::sortAndCount(DynArray<Product*> products) {
 
 
 void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) {
-    int productCount = sortAndCount(products);
-
-    out << products[0]->getName() << "\nCOUNT: "
-        << productCount << "\nDETAILS:\n";
-
     for (int i = 0; i < products.size(); i++) {
-        out << products[i]->getManufacturer() << " \n "
+        out << products[i]->getName() << "\nCOUNT: "
+            << products[i]->getQuantity() << "\nDETAILS:\n"
+            << products[i]->getManufacturer() << " \n "
             << products[i]->getPlacement().index << " SHELF "
             << products[i]->getPlacement().shelf << " SECTION "
             << products[i]->getPlacement().section << "\n EXP:"
@@ -368,7 +365,9 @@ void Warehouse::operator<<(std::ostream& out) {
                     listed.push(sections[i][j][k].getName());
                     DynArray<Product*> products(10);
                     findAllByName(sections[i][j][k].getName(), products);
+                    int count = sortAndCount(products);
                     printProducts(out, products);
+                    out << "\n * * * COUNT: " << count << "\n";
                 }
             }
         }
@@ -470,4 +469,11 @@ bool Warehouse::insertProduct(Product product) {
     }
     
     return addProduct(product);
-} 
+}
+
+
+void Warehouse::cleanup(std::ostream& file, Date date) {
+    DynArray<Product*> products(10);
+    findAllByDate(date, products);
+    printProducts(file, products);
+}
