@@ -5,9 +5,6 @@ struct Date {
     int day;
     int month;
     int year;
-    bool valid;
-
-    bool validate();
 
     Date();
     Date(int day, int month, int year);
@@ -21,6 +18,10 @@ struct Date {
     bool operator<=(Date const& other);
     bool operator>=(Date const& other);
     bool isValid();
+
+private:
+    bool valid;
+    bool validate();
 };
 
 #endif
