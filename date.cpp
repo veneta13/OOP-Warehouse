@@ -74,7 +74,7 @@ bool Date::validate() {
 }
 
 
-bool Date::operator>(Date const& other) {
+bool Date::operator>(Date const& other) const {
     if (this->year > other.year) {
         return true;
     }
@@ -97,7 +97,7 @@ bool Date::operator>(Date const& other) {
 }
 
 
-bool Date::operator==(Date const& other) {
+bool Date::operator==(Date const& other) const {
     if (this->year == other.year && this->month == other.month && this->day == other.day) {
         return true;
     }
@@ -107,7 +107,7 @@ bool Date::operator==(Date const& other) {
 }
 
 
-bool Date::operator<(Date const& other) {
+bool Date::operator<(Date const& other) const {
     if (*this == other || *this > other) {
         return false;
     }
@@ -117,7 +117,7 @@ bool Date::operator<(Date const& other) {
 }
 
 
-bool Date::operator>=(Date const& other) {
+bool Date::operator>=(Date const& other) const {
     if (*this == other || *this > other) {
         return true;
     }
@@ -127,7 +127,7 @@ bool Date::operator>=(Date const& other) {
 }
 
 
-bool Date::operator<=(Date const& other) {
+bool Date::operator<=(Date const& other) const {
     if (*this == other || *this < other) {
         return true;
     }
@@ -137,6 +137,6 @@ bool Date::operator<=(Date const& other) {
 }
 
 
-bool Date::isValid() {
+bool Date::isValid() const {
     return valid;
 }

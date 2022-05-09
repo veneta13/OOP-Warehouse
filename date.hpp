@@ -12,12 +12,12 @@ struct Date {
     Date& operator=(Date const& other);
     ~Date();
 
-    bool operator>(Date const& other);
-    bool operator==(Date const& other);
-    bool operator<(Date const& other);
-    bool operator<=(Date const& other);
-    bool operator>=(Date const& other);
-    bool isValid();
+    bool operator>(Date const& other) const;
+    bool operator==(Date const& other) const;
+    bool operator<(Date const& other) const;
+    bool operator<=(Date const& other) const;
+    bool operator>=(Date const& other) const;
+    bool isValid() const;
 
 private:
     bool valid;
