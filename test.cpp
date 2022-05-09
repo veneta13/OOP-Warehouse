@@ -191,6 +191,48 @@ TEST_CASE("Date tests")
     }
 }
 
+TEST_CASE("Placement tests") 
+{
+    SECTION("Default")
+    {
+        Placement p1;
+        REQUIRE(p1.index == -1);
+        REQUIRE(p1.shelf == -1);
+        REQUIRE(p1.section == -1);
+    }
+
+    SECTION("Placement with parameters")
+    {
+        Placement p1({2, 3, 4});
+        REQUIRE(p1.index == 4);
+        REQUIRE(p1.shelf == 3);
+        REQUIRE(p1.section == 2);
+    }
+
+    SECTION("Change members")
+    {
+        Placement p1({2, 3, 4});
+        REQUIRE(p1.index == 4);
+        REQUIRE(p1.shelf == 3);
+        REQUIRE(p1.section == 2);
+
+
+        p1.index = 5;
+        REQUIRE(p1.index == 5);
+        REQUIRE(p1.shelf == 3);
+        REQUIRE(p1.section == 2);
+
+        p1.shelf = 9;
+        REQUIRE(p1.index == 5);
+        REQUIRE(p1.shelf == 9);
+        REQUIRE(p1.section == 2);
+
+         p1.section = 7;
+        REQUIRE(p1.index == 5);
+        REQUIRE(p1.shelf == 9);
+        REQUIRE(p1.section == 7);
+    }
+}
 
 TEST_CASE ("Container tests")
 {
