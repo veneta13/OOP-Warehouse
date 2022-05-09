@@ -234,6 +234,183 @@ TEST_CASE("Placement tests")
     }
 }
 
+TEST_CASE("Product tests")
+{
+    char const* dummyName1 = "dummy Name1";
+    char const* dummyName2 = "dummy Name2";
+    char const* dummyManufacturer1 = "dummy Manufacturer1";
+    char const* dummyManufacturer2 = "dummy Manufacturer2";
+    char const* dummyComment1 = "This is a dummy comment";
+    char const* dummyComment2 = "This is another dummy comment";
+    Date dummyDate1(12, 3, 2004), dummyDate2(17, 9, 2021);
+    Placement dummyPlacement1({1, 2, 3});
+    Placement dummyPlacement2({7, 8, 9});
+
+    SECTION("Default constructor")
+    {
+        Product p1;
+        REQUIRE(p1.getName() == nullptr);
+        REQUIRE(p1.getManufacturer() == nullptr);
+        REQUIRE(p1.getComment() == nullptr);
+        REQUIRE(p1.getQuantity() == 0);
+        REQUIRE(p1.getExpirationDate() == Date());
+        REQUIRE(p1.getStockedDate() == Date());
+        REQUIRE(p1.getPlacement().index == Placement().index);
+    }
+
+    SECTION("Constructor with parameters")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        REQUIRE(strcmp(p1.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p1.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p1.getComment(), dummyComment1) == 0);
+        REQUIRE(p1.getQuantity() == 1);
+        REQUIRE(p1.getExpirationDate() == dummyDate1);
+        REQUIRE(p1.getStockedDate() == dummyDate2);
+        REQUIRE(p1.getPlacement().index == dummyPlacement1.index);
+    }
+
+    SECTION("Copy constructor")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(p1);
+        REQUIRE(strcmp(p1.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p1.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p1.getComment(), dummyComment1) == 0);
+        REQUIRE(p1.getQuantity() == 1);
+        REQUIRE(p1.getExpirationDate() == dummyDate1);
+        REQUIRE(p1.getStockedDate() == dummyDate2);
+        REQUIRE(p1.getPlacement().index == dummyPlacement1.index);
+
+        REQUIRE(strcmp(p2.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p2.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p2.getComment(), dummyComment1) == 0);
+        REQUIRE(p2.getQuantity() == 1);
+        REQUIRE(p2.getExpirationDate() == dummyDate1);
+        REQUIRE(p2.getStockedDate() == dummyDate2);
+        REQUIRE(p2.getPlacement().index == dummyPlacement1.index);
+    }
+
+    SECTION("Operator =")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2 = p1;
+        REQUIRE(strcmp(p1.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p1.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p1.getComment(), dummyComment1) == 0);
+        REQUIRE(p1.getQuantity() == 1);
+        REQUIRE(p1.getExpirationDate() == dummyDate1);
+        REQUIRE(p1.getStockedDate() == dummyDate2);
+        REQUIRE(p1.getPlacement().index == dummyPlacement1.index);
+
+        REQUIRE(strcmp(p2.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p2.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p2.getComment(), dummyComment1) == 0);
+        REQUIRE(p2.getQuantity() == 1);
+        REQUIRE(p2.getExpirationDate() == dummyDate1);
+        REQUIRE(p2.getStockedDate() == dummyDate2);
+        REQUIRE(p2.getPlacement().index == dummyPlacement1.index);
+    }
+
+    SECTION("Setters and getters")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        REQUIRE(strcmp(p1.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p1.getManufacturer(), dummyManufacturer1) == 0);
+        REQUIRE(strcmp(p1.getComment(), dummyComment1) == 0);
+        REQUIRE(p1.getQuantity() == 1);
+        REQUIRE(p1.getExpirationDate() == dummyDate1);
+        REQUIRE(p1.getStockedDate() == dummyDate2);
+        REQUIRE(p1.getPlacement().index == dummyPlacement1.index);
+
+        p1.setName(dummyName2);
+        REQUIRE(strcmp(p1.getName(), dummyName2) == 0);
+
+        p1.setManufacturer(dummyManufacturer2);
+        REQUIRE(strcmp(p1.getManufacturer(), dummyManufacturer2) == 0);
+
+        p1.setComment(dummyComment2);
+        REQUIRE(strcmp(p1.getComment(), dummyComment2) == 0);
+
+        p1.setQuantity(5);
+        REQUIRE(p1.getQuantity() == 5);
+
+        p1.setExpirationDate(dummyDate2);
+        REQUIRE(p1.getExpirationDate() == dummyDate2);
+
+        p1.setStockedDate(dummyDate1);
+        REQUIRE(p1.getStockedDate() == dummyDate1);
+
+        p1.setPlacement(dummyPlacement2);
+        REQUIRE(p1.getPlacement().index == dummyPlacement2.index);
+        REQUIRE(p1.getPlacement().shelf == dummyPlacement2.shelf);
+        REQUIRE(p1.getPlacement().section == dummyPlacement2.section);
+
+        p1.setIndex(40);
+        REQUIRE(p1.getIndex() == 40);
+
+        p1.setShelf(15);
+        REQUIRE(p1.getShelf() == 15);
+
+        p1.setSection(30);
+        REQUIRE(p1.getSection() == 30);
+    }
+
+    SECTION("Same name check")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2 = p1;
+        REQUIRE(strcmp(p1.getName(), dummyName1) == 0);
+        REQUIRE(strcmp(p2.getName(), dummyName1) == 0);
+        REQUIRE(p1.hasSameName(p1));
+        REQUIRE(p2.hasSameName(p2));
+        REQUIRE(p1.hasSameName(p2));
+        REQUIRE(p2.hasSameName(p1));
+
+        p2.setName(dummyName2);
+        REQUIRE(strcmp(p2.getName(), dummyName2) == 0);
+        REQUIRE(p2.hasSameName(p2));
+        REQUIRE(!(p1.hasSameName(p2)));
+        REQUIRE(!(p2.hasSameName(p1)));
+    }
+
+    SECTION("Operator ==")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2 = p1;
+        REQUIRE(p1 == p2);
+        REQUIRE(p1 == p1);
+        REQUIRE(p2 == p2);
+
+        p2.setName(dummyName2);
+        REQUIRE(!(p1 == p2));
+    }
+
+    SECTION("Operator >")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        REQUIRE(p1 > p2);
+        REQUIRE(!(p2 > p1));
+
+        p2.setName(dummyName2);
+        REQUIRE(!(p1 > p2));
+        REQUIRE(!(p2 > p1));
+    }
+
+    SECTION("Operator <")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement1);
+        REQUIRE(p1 < p2);
+        REQUIRE(!(p2 < p1));
+
+        p2.setName(dummyName2);
+        REQUIRE(!(p1 < p2));
+        REQUIRE(!(p2 < p1));
+    }
+}
+
 TEST_CASE ("Container tests")
 {
     SECTION ("Default constructor")
