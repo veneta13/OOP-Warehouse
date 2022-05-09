@@ -48,35 +48,33 @@ Product& Product::operator=(Product const& other) {
 
 
 Product::~Product() {
-    delete[] name;
+    if (name != nullptr) {delete[] name;}
     name = nullptr;
-    delete[] manufacturer;
+    if (manufacturer != nullptr) {delete[] manufacturer;}
     manufacturer = nullptr;
-    delete[] comment;
+    if (comment != nullptr) {delete[] comment;}
     comment = nullptr;
     quantity = 0;
-    delete &expirationDate;
-    delete &stockedDate;
     placement = Placement();
 }
 
 
 void Product::setName(char const* _name) {
-    delete[] name;
+    if (name != nullptr) { delete[] name; }
     name = new char[strlen(_name) + 1];
     strcpy(name, _name);
 }
 
 
 void Product::setManufacturer(char const* _manufacturer) {
-    delete[] manufacturer;
+    if (manufacturer != nullptr) { delete[] manufacturer; }
     manufacturer = new char[strlen(_manufacturer) + 1];
     strcpy(manufacturer, _manufacturer);
 }
 
 
 void Product::setComment(char const* _comment) {
-    delete[] comment;
+    if (comment != nullptr) { delete[] comment; }
     comment = new char[strlen(_comment) + 1];
     strcpy(comment, _comment);
 }
@@ -118,7 +116,7 @@ void Product::setSection(int _section) {
 
 
 bool Product::operator==(Product const& other) const {
-    if (this->hasSameName(other) && (expirationDate == other.expirationDate)) {
+    if (hasSameName(other) && (expirationDate == other.expirationDate)) {
         return true;
     }
     return false;
