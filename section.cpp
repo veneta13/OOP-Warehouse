@@ -18,7 +18,7 @@ Section::Section(Section const& other) : Container(other.capacity) {
 
 Section& Section::operator=(Section const& other) {
     if (this != &other) {
-        delete[] shelves;
+        if (shelves!= nullptr) { delete[] shelves; }
         capacity = other.capacity;
         shelves = new Shelf[capacity];
         copyShelves(other.shelves);
@@ -29,7 +29,7 @@ Section& Section::operator=(Section const& other) {
 
 Section::~Section() {
     capacity = 0;
-    delete[] shelves;
+    if (shelves != nullptr) { delete[] shelves; }
     shelves = nullptr;
 }
 
@@ -37,17 +37,19 @@ Section::~Section() {
 void Section::copyShelves(Shelf* others) {
     for (int i = 0; i < capacity; i++) {
         shelves[i] = others[i];
-    } 
+    }
 }
 
 
-Shelf& Section::operator[](int index) const {
+Shelf& Section::operator[](int index) {
     return shelves[index];
 }
 
 
-Shelf& Section::at(int index) const {
-    return shelves[index];
+bool Section::setShelfCapacity(int index, int shelfCapacity) {
+    if (index < 0 || index > capacity - 1) { return false; }
+    shelves[index] = Shelf(shelfCapacity);
+    return true;
 }
 
 

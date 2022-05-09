@@ -5,17 +5,21 @@
 
 char const* dummyName1 = "dummy Name1";
 char const* dummyName2 = "dummy Name2";
+char const* dummyName3 = "dummy Name3";
 char const* dummyManufacturer1 = "dummy Manufacturer1";
 char const* dummyManufacturer2 = "dummy Manufacturer2";
+char const* dummyManufacturer3 = "dummy Manufacturer3";
 char const* dummyComment1 = "This is a dummy comment";
 char const* dummyComment2 = "This is another dummy comment";
-Date dummyDate1(12, 3, 2004), dummyDate2(17, 9, 2021);
+char const* dummyComment3 = "This is dummy comment 3";
+Date dummyDate1(12, 3, 2004);
+Date dummyDate2(1, 2, 2021);
 Placement dummyPlacement1({1, 2, 3});
 Placement dummyPlacement2({7, 8, 9});
 
 TEST_CASE("Date tests")
 {
-    SECTION ("Default constructor")
+    SECTION("Default constructor")
     {
         Date d1;
         REQUIRE(d1.day == 0);
@@ -23,7 +27,7 @@ TEST_CASE("Date tests")
         REQUIRE(d1.year == 0);
     }
 
-    SECTION ("Constructor with parameters")
+    SECTION("Constructor with parameters")
     {
         Date d1(9, 10, 2000);
         REQUIRE(d1.day == 9);
@@ -31,7 +35,7 @@ TEST_CASE("Date tests")
         REQUIRE(d1.year == 2000);
     }
 
-    SECTION ("Copy constructor")
+    SECTION("Copy constructor")
     {
         Date d1(9, 10, 2001);
         Date d2(d1);
@@ -43,7 +47,7 @@ TEST_CASE("Date tests")
         REQUIRE(d2.year == 2001);
     }
 
-    SECTION ("Operator =")
+    SECTION("Operator =")
     {
         Date d1(20, 4, 2015);
         Date d2 = d1;
@@ -55,7 +59,7 @@ TEST_CASE("Date tests")
         REQUIRE(d2.year == 2015);
     }
 
-    SECTION ("Validity")
+    SECTION("Validity")
     {
         Date d1(-1, 2, 2015);
         REQUIRE(!d1.isValid());
@@ -88,7 +92,7 @@ TEST_CASE("Date tests")
         REQUIRE(d10.isValid());
     }
 
-    SECTION ("Operator >")
+    SECTION("Operator >")
     {
         Date d1(10, 1, 2006), d2(10, 1, 2002);
         REQUIRE(d1 > d2);
@@ -109,7 +113,7 @@ TEST_CASE("Date tests")
         REQUIRE(!(d7 > d7));
     }
 
-    SECTION ("Operator <")
+    SECTION("Operator <")
     {
         Date d1(10, 1, 2006), d2(10, 1, 2002);
         REQUIRE(d2 < d1);
@@ -130,7 +134,7 @@ TEST_CASE("Date tests")
         REQUIRE(!(d7 < d7));
     }
 
-    SECTION ("Operator ==") 
+    SECTION("Operator ==") 
     {
         Date d1(10, 1, 2006);
         Date d2 = d1;
@@ -149,7 +153,7 @@ TEST_CASE("Date tests")
         REQUIRE(!(d7 == d8));
     }
 
-    SECTION ("Operator !=") 
+    SECTION("Operator !=") 
     {
         Date d1(10, 1, 2006);
         Date d2 = d1;
@@ -168,7 +172,7 @@ TEST_CASE("Date tests")
         REQUIRE(d7 != d8);
     }
 
-    SECTION ("Operator >=")
+    SECTION("Operator >=")
     {
         Date d1(10, 1, 2006), d2(10, 1, 2002);
         REQUIRE(d1 >= d2);
@@ -184,7 +188,7 @@ TEST_CASE("Date tests")
         REQUIRE(d6 >= d5);
     }
 
-    SECTION ("Operator <=")
+    SECTION("Operator <=")
     {
         Date d1(10, 1, 2006), d2(10, 1, 2002);
         REQUIRE(!(d1 <= d2));
@@ -413,19 +417,19 @@ TEST_CASE("Product tests")
 
 TEST_CASE("Container tests")
 {
-    SECTION ("Default constructor")
+    SECTION("Default constructor")
     {
         Container c1;
         REQUIRE(c1.getCapacity() == 0);
     }
 
-    SECTION ("Constructor with parameters")
+    SECTION("Constructor with parameters")
     {
         Container c1(5);
         REQUIRE(c1.getCapacity() == 5);
     }
 
-    SECTION ("Copy constructor")
+    SECTION("Copy constructor")
     {
         Container c1(5);
         Container c2(c1);
@@ -433,7 +437,7 @@ TEST_CASE("Container tests")
         REQUIRE(c2.getCapacity() == 5);
     }
 
-    SECTION ("Operator =") {
+    SECTION("Operator =") {
         Container c1(10);
         Container c2 = c1;
         REQUIRE(c1.getCapacity() == 10);
@@ -443,19 +447,19 @@ TEST_CASE("Container tests")
 
 TEST_CASE("Shelf tests")
 {
-    SECTION ("Default constructor")
+    SECTION("Default constructor")
     {
         Shelf s1;
         REQUIRE(s1.getCapacity() == 0);
     }
 
-    SECTION ("Constructor with parameters")
+    SECTION("Constructor with parameters")
     {
         Shelf s1(10);
         REQUIRE(s1.getCapacity() == 10);
     }
 
-    SECTION ("Copy constructor")
+    SECTION("Copy constructor")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
@@ -467,7 +471,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(s2[0] == p1);
     }
 
-    SECTION ("Operator =")
+    SECTION("Operator =")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
@@ -479,7 +483,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(s2[0] == p1);
     }
 
-    SECTION ("Operator []")
+    SECTION("Operator []")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
@@ -491,7 +495,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(s1[1] == p2);
     }
 
-    SECTION ("Add products")
+    SECTION("Add products")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
@@ -522,7 +526,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
     }
 
-    SECTION ("Find by name")
+    SECTION("Find by name")
     {
         Shelf s1(10);
         REQUIRE(!s1.findByName(dummyName1));
@@ -532,7 +536,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(s1.findByName(dummyName1));
     }
 
-    SECTION ("Find all by name")
+    SECTION("Find all by name")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
@@ -552,7 +556,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(result.size() == 2);
     }
 
-    SECTION ("Find all by date")
+    SECTION("Find all by date")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
@@ -570,5 +574,204 @@ TEST_CASE("Shelf tests")
         REQUIRE(s1.addProduct(p2, 2, true));
         s1.findAllByDate(dummyDate1, result);
         REQUIRE(result.size() == 2);
+    }
+
+    SECTION("Remove")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
+        Product p3(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        
+        REQUIRE(s1.findEqual(dummyName1, dummyDate1) == nullptr);
+        
+        REQUIRE(s1.addProduct(p2, 0, true));
+        REQUIRE(s1.findEqual(dummyName1, dummyDate1) == nullptr);
+
+        REQUIRE(s1.addProduct(p1, 1, true));
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
+
+        s1.removeProduct(1);
+
+        REQUIRE(s1.addProduct(p3, 2, true));
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p3);
+    }
+}
+
+TEST_CASE("Section tests")
+{
+    SECTION("Default constructor")
+    {
+        Section c1;
+        REQUIRE(c1.getCapacity() == 0);
+    }
+
+    SECTION("Constructor with parameters")
+    {
+        Section c1(2);
+        REQUIRE(c1.getCapacity() == 2);
+    }
+
+    SECTION("Copy constructor")
+    {
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        Section c2(c1);
+        
+        REQUIRE(c2.getCapacity() == 2);
+        REQUIRE(c2.findByName(dummyName1));
+        REQUIRE(c2.findByName(dummyName2));
+    }
+
+    SECTION("Operator =")
+    {
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        Section c2 = c1;
+        
+        REQUIRE(c2.getCapacity() == 2);
+        REQUIRE(c2.findByName(dummyName1));
+        REQUIRE(c2.findByName(dummyName2));
+    }
+
+    SECTION("Operator []")
+    {
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        REQUIRE(c1[0][0] == p1);
+        REQUIRE(c1[1][0] == p2);
+    }
+
+    SECTION("Set shelf capacity")
+    {
+        Section c1(2);
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1[0].getCapacity() == 2);
+        REQUIRE(c1.setShelfCapacity(1, 3));
+        REQUIRE(c1[1].getCapacity() == 3);
+        REQUIRE(!c1.setShelfCapacity(2, 3));
+    }
+
+    SECTION("Find equal")
+    {
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p3(dummyName2, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p3).index == 0);
+
+        REQUIRE(!c1.findEqual(dummyName2, dummyDate2));
+        REQUIRE(*c1.findEqual(dummyName1, dummyDate1) == p1);
+
+        REQUIRE(c1[1].addProduct(p2).index == 1);
+        REQUIRE(*c1.findEqual(dummyName1, dummyDate1) == p1);
+    }
+
+    SECTION("Find by name")
+    {
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p3(dummyName2, dummyManufacturer1, dummyComment1, 0, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        REQUIRE(c1.findByName(dummyName1));
+        REQUIRE(!c1.findByName(dummyName2));
+
+        REQUIRE(c1[1].addProduct(p3).index == 1);
+        REQUIRE(!c1.findByName(dummyName2));
+    }
+
+    SECTION("Find all by name") 
+    {
+        DynArray<Product*> result(5);
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p3(dummyName2, dummyManufacturer1, dummyComment1, 0, dummyDate1, dummyDate2, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+                
+        REQUIRE(result.size() == 0);
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        c1.findAllByName(dummyName1, result);
+        REQUIRE(result.size() == 2);
+
+        REQUIRE(c1[1].addProduct(p3).index == 1);
+
+        c1.findAllByName(dummyName1, result);
+        REQUIRE(result.size() == 4);
+    }
+
+    SECTION("Find all by date") 
+    {
+        Section c2(1);
+        DynArray<Product*> result(3);
+
+        Product p4;
+        
+        REQUIRE(c2.setShelfCapacity(0, 3));
+                
+        REQUIRE(result.size() == 0);
+
+        REQUIRE(c2[0].addProduct(p4).index == 0);
+
+        c2.findAllByDate(dummyDate1, result);
+        REQUIRE(result.size() == 0);
+    }
+
+    SECTION("Remove product")
+    {
+        Section c(1);
+        Product p6(dummyName1, dummyManufacturer2, dummyComment1, 8, dummyDate1, dummyDate2, dummyPlacement2);
+        REQUIRE(c.setShelfCapacity(0, 3));
+
+        Placement res = c.addProduct(p6);
+        REQUIRE(res.index == 0);
+        REQUIRE(res.section == 0);
+
+        REQUIRE(c.findByName(dummyName1));
+
+        c.removeProduct(0, 0);
+
+        REQUIRE(!c.findByName(dummyName1));
     }
 }

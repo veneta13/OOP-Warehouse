@@ -15,8 +15,9 @@ public:
     Section& operator=(const Section& other);
     ~Section();
 
-    Shelf& operator[](int index) const;
-    Shelf& at(int index) const;
+    Shelf& operator[](int index);
+
+    bool setShelfCapacity(int index, int shelfCapacity);
 
     Product* findByName(char const* name);
     Product* findEqual(char const* name, Date date);
