@@ -47,6 +47,9 @@ public:
     Date getExpirationDate() const;
     Date getStockedDate() const;
     Placement getPlacement() const;
+    int getIndex() const;
+    int getShelf() const;
+    int getSection() const;
 };
 
 #endif

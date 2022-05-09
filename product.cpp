@@ -181,4 +181,16 @@ Date Product::getStockedDate() const {
 Placement Product::getPlacement() const {
     return placement;
 }
+
+int Product::getIndex() const {
+    return placement.index;
+}
+
+int Product::getShelf() const {
+    return placement.shelf;
+}
+
+int Product::getSection() const {
+    return placement.section;
+}
  
