@@ -117,14 +117,14 @@ void Product::setSection(int _section) {
 }
 
 
-bool Product::operator==(Product const& other) {
-    if (hasSameName(other) && (expirationDate == other.expirationDate)) {
+bool Product::operator==(Product const& other) const {
+    if (this->hasSameName(other) && (expirationDate == other.expirationDate)) {
         return true;
     }
     return false;
 }
 
-bool Product::operator>(Product const& other) {
+bool Product::operator>(Product const& other) const {
     if (hasSameName(other) && (expirationDate > other.expirationDate)) {
         return true;
     }
@@ -132,7 +132,7 @@ bool Product::operator>(Product const& other) {
 }
 
 
-bool Product::operator<(Product const& other) {
+bool Product::operator<(Product const& other) const {
     if (hasSameName(other) && (expirationDate < other.expirationDate)) {
         return true;
     }
@@ -140,7 +140,7 @@ bool Product::operator<(Product const& other) {
 }
 
 
-bool Product::hasSameName(Product const& other) {
+bool Product::hasSameName(Product const& other) const {
     if (strcmp(name, other.name) == 0) {
         return true;
     }

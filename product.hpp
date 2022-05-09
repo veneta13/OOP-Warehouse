@@ -24,10 +24,10 @@ public:
     Product& operator=(Product const& other);
     ~Product();
 
-    bool operator==(Product const& other);
-    bool operator>(Product const& other);
-    bool operator<(Product const& other);
-    bool hasSameName(Product const& other);
+    bool operator==(Product const& other) const;
+    bool operator>(Product const& other) const;
+    bool operator<(Product const& other) const;
+    bool hasSameName(Product const& other) const;
 
     void setName(char const* _name);
     void setManufacturer(char const* _manufacturer);
