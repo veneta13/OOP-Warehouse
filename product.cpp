@@ -48,18 +48,25 @@ Product& Product::operator=(Product const& other) {
 
 
 Product::~Product() {
-    if (name != nullptr) {delete[] name;}
-    name = nullptr;
-    if (manufacturer != nullptr) {delete[] manufacturer;}
-    manufacturer = nullptr;
-    if (comment != nullptr) {delete[] comment;}
-    comment = nullptr;
+    if (name != nullptr) {
+        delete[] name;
+        name = nullptr;
+    }
+    if (manufacturer != nullptr) {
+        delete[] manufacturer;
+        manufacturer = nullptr;
+    }
+    if (comment != nullptr) { 
+        delete[] comment;
+        comment = nullptr;
+    }
     quantity = 0;
     placement = Placement();
 }
 
 
 void Product::setName(char const* _name) {
+    if (_name == nullptr) { return; }
     if (name != nullptr) { delete[] name; }
     name = new char[strlen(_name) + 1];
     strcpy(name, _name);
@@ -67,6 +74,7 @@ void Product::setName(char const* _name) {
 
 
 void Product::setManufacturer(char const* _manufacturer) {
+    if (_manufacturer == nullptr) { return; }
     if (manufacturer != nullptr) { delete[] manufacturer; }
     manufacturer = new char[strlen(_manufacturer) + 1];
     strcpy(manufacturer, _manufacturer);
@@ -74,6 +82,7 @@ void Product::setManufacturer(char const* _manufacturer) {
 
 
 void Product::setComment(char const* _comment) {
+    if (_comment == nullptr) { return; }
     if (comment != nullptr) { delete[] comment; }
     comment = new char[strlen(_comment) + 1];
     strcpy(comment, _comment);
@@ -113,7 +122,6 @@ void Product::setShelf(int _shelf) {
 void Product::setSection(int _section) {
     placement.section = _section;
 }
-
 
 bool Product::operator==(Product const& other) const {
     if (hasSameName(other) && (expirationDate == other.expirationDate)) {

@@ -3,6 +3,16 @@
 
 #include "warehouse.hpp"
 
+char const* dummyName1 = "dummy Name1";
+char const* dummyName2 = "dummy Name2";
+char const* dummyManufacturer1 = "dummy Manufacturer1";
+char const* dummyManufacturer2 = "dummy Manufacturer2";
+char const* dummyComment1 = "This is a dummy comment";
+char const* dummyComment2 = "This is another dummy comment";
+Date dummyDate1(12, 3, 2004), dummyDate2(17, 9, 2021);
+Placement dummyPlacement1({1, 2, 3});
+Placement dummyPlacement2({7, 8, 9});
+
 TEST_CASE("Date tests")
 {
     SECTION ("Default constructor")
@@ -236,16 +246,6 @@ TEST_CASE("Placement tests")
 
 TEST_CASE("Product tests")
 {
-    char const* dummyName1 = "dummy Name1";
-    char const* dummyName2 = "dummy Name2";
-    char const* dummyManufacturer1 = "dummy Manufacturer1";
-    char const* dummyManufacturer2 = "dummy Manufacturer2";
-    char const* dummyComment1 = "This is a dummy comment";
-    char const* dummyComment2 = "This is another dummy comment";
-    Date dummyDate1(12, 3, 2004), dummyDate2(17, 9, 2021);
-    Placement dummyPlacement1({1, 2, 3});
-    Placement dummyPlacement2({7, 8, 9});
-
     SECTION("Default constructor")
     {
         Product p1;
@@ -411,7 +411,7 @@ TEST_CASE("Product tests")
     }
 }
 
-TEST_CASE ("Container tests")
+TEST_CASE("Container tests")
 {
     SECTION ("Default constructor")
     {
@@ -438,5 +438,137 @@ TEST_CASE ("Container tests")
         Container c2 = c1;
         REQUIRE(c1.getCapacity() == 10);
         REQUIRE(c2.getCapacity() == 10);
+    }
+}
+
+TEST_CASE("Shelf tests")
+{
+    SECTION ("Default constructor")
+    {
+        Shelf s1;
+        REQUIRE(s1.getCapacity() == 0);
+    }
+
+    SECTION ("Constructor with parameters")
+    {
+        Shelf s1(10);
+        REQUIRE(s1.getCapacity() == 10);
+    }
+
+    SECTION ("Copy constructor")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+    
+        REQUIRE(s1.addProduct(p1, 0, true));
+
+        Shelf s2(s1);
+        REQUIRE(s2.getCapacity() == 10);
+        REQUIRE(s2[0] == p1);
+    }
+
+    SECTION ("Operator =")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+    
+        REQUIRE(s1.addProduct(p1, 0, true));
+
+        Shelf s2 = s1;
+        REQUIRE(s2.getCapacity() == 10);
+        REQUIRE(s2[0] == p1);
+    }
+
+    SECTION ("Operator []")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+    
+        REQUIRE(s1.addProduct(p1, 0, true));
+        REQUIRE(s1.addProduct(p2, 1, true));
+        REQUIRE(s1[0] == p1);
+        REQUIRE(s1[1] == p2);
+    }
+
+    SECTION ("Add products")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
+        Product p3(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        
+        REQUIRE(s1.addProduct(p1).index == 0);
+        REQUIRE(s1.addProduct(p2).index == 1);
+        REQUIRE(s1.addProduct(p3).index == 2);
+    }
+
+    SECTION("Find equal")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
+        Product p3(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        
+        REQUIRE(s1.findEqual(dummyName1, dummyDate1) == nullptr);
+        
+        REQUIRE(s1.addProduct(p2, 0, true));
+        REQUIRE(s1.findEqual(dummyName1, dummyDate1) == nullptr);
+
+        REQUIRE(s1.addProduct(p1, 1, true));
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
+
+        REQUIRE(s1.addProduct(p3, 2, true));
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
+    }
+
+    SECTION ("Find by name")
+    {
+        Shelf s1(10);
+        REQUIRE(!s1.findByName(dummyName1));
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        
+        REQUIRE(s1.addProduct(p1, 0, true));
+        REQUIRE(s1.findByName(dummyName1));
+    }
+
+    SECTION ("Find all by name")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
+        DynArray<Product*> result(5);
+        
+        REQUIRE(result.size() == 0);
+        s1.findAllByName(dummyName1, result);
+        REQUIRE(result.size() == 0);
+        
+        REQUIRE(s1.addProduct(p1, 1, true));
+        s1.findAllByName(dummyName1, result);
+        REQUIRE(result.size() == 1);
+
+        REQUIRE(s1.addProduct(p2, 2, true));
+        s1.findAllByName(dummyName1, result);
+        REQUIRE(result.size() == 2);
+    }
+
+    SECTION ("Find all by date")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
+        DynArray<Product*> result(5);
+        
+        REQUIRE(result.size() == 0);
+        s1.findAllByDate(dummyDate1, result);
+        REQUIRE(result.size() == 0);
+        
+        REQUIRE(s1.addProduct(p1, 1, true));
+        s1.findAllByDate(dummyDate1, result);
+        REQUIRE(result.size() == 1);
+
+        REQUIRE(s1.addProduct(p2, 2, true));
+        s1.findAllByDate(dummyDate1, result);
+        REQUIRE(result.size() == 2);
     }
 }
