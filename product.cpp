@@ -11,7 +11,7 @@ Product::Product() {
 }
 
 
-Product::Product(char* name, char* manufacturer, char* comment, int quantity, Date expirationDate, Date stockedDate, Placement placement) {
+Product::Product(char const* name, char const* manufacturer, char const* comment, int quantity, Date expirationDate, Date stockedDate, Placement placement) {
     setName(name);
     setManufacturer(manufacturer);
     setComment(comment);
