@@ -87,6 +87,16 @@ void Product::setQuantity(int _quantity) {
 }
 
 
+void Product::setExpirationDate(Date _expirationDate) {
+    expirationDate = _expirationDate;
+}
+
+
+void Product::setStockedDate(Date _stockedDate) {
+    stockedDate = _stockedDate;
+}
+
+
 void Product::setPlacement(Placement _placement) {
     placement = _placement;
 }

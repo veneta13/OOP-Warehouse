@@ -33,6 +33,8 @@ public:
     void setManufacturer(char const* _manufacturer);
     void setComment(char const* _comment);
     void setQuantity(int _quantity);
+    void setExpirationDate(Date _expirationDate);
+    void setStockedDate(Date _stockedDate);
     void setPlacement(Placement _placement);
     void setIndex(int _index);
     void setShelf(int _shelf);
