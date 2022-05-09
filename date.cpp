@@ -107,6 +107,11 @@ bool Date::operator==(Date const& other) const {
 }
 
 
+bool Date::operator!=(Date const& other) const {
+    return !operator==(other);
+}
+
+
 bool Date::operator<(Date const& other) const {
     if (*this == other || *this > other) {
         return false;

@@ -14,6 +14,7 @@ struct Date {
 
     bool operator>(Date const& other) const;
     bool operator==(Date const& other) const;
+    bool operator!=(Date const& other) const;
     bool operator<(Date const& other) const;
     bool operator<=(Date const& other) const;
     bool operator>=(Date const& other) const;
