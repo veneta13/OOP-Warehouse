@@ -62,9 +62,7 @@ bool Date::validate() {
         if (day > 30) {
             return false;
         }
-        else {
-            return true;
-        }
+        return true;
     }
 
     if (day > 31) {
@@ -101,9 +99,7 @@ bool Date::operator==(Date const& other) const {
     if (this->year == other.year && this->month == other.month && this->day == other.day) {
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 
@@ -116,9 +112,7 @@ bool Date::operator<(Date const& other) const {
     if (*this == other || *this > other) {
         return false;
     }
-    else {
-        return true;
-    }
+    return true;
 }
 
 
@@ -126,9 +120,7 @@ bool Date::operator>=(Date const& other) const {
     if (*this == other || *this > other) {
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 
@@ -136,9 +128,7 @@ bool Date::operator<=(Date const& other) const {
     if (*this == other || *this < other) {
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 
