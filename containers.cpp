@@ -118,6 +118,7 @@ void Shelf::findAllByDate(Date date, DynArray<Product*>& results) {
 
 
 bool Shelf::addProduct(Product product, int index) {
+    if (index < 0 || index > capacity - 1) { return false; }
     if (products[index].getQuantity() != 0) { return false; }
     products[index] = product;
     return true;
@@ -225,10 +226,8 @@ void Section::findAllByDate(Date date, DynArray<Product*>& results) {
 
 
 bool Section::addProduct(Product product, int shelfIndex, int index) {
-    if (shelves[shelfIndex].addProduct(product, index)) {
-        return true;
-    }
-    return false;
+    if (shelfIndex < 0 || shelfIndex > capacity - 1) { return false; }
+    return shelves[shelfIndex].addProduct(product, index);
 }
 
 
@@ -399,6 +398,7 @@ void Warehouse::findAllByDate(Date date, DynArray<Product*>& results) {
 
 
 bool Warehouse::addProduct(Product product, int sectionIndex, int shelfIndex, int index) {
+    if (sectionIndex < 0 || sectionIndex > capacity - 1) { return false; }
     if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
         sections[sectionIndex][shelfIndex][index].setPlacement(Placement{sectionIndex, shelfIndex, index});
         return true;
@@ -457,15 +457,46 @@ bool Warehouse::insertProduct(Product product) {
     Product* found = findEqual(product.getName(), product.getExpirationDate());
 
     if (found) {
-        Placement p = found->getPlacement();    
+        Placement pNew, p = found->getPlacement();
 
-        // Place on the same shelf
-        if (sections[p.section, p.shelf].addProduct(product).index != -1) {
+        // Place next to item on the shelf
+        if (addProduct(product, p.section, p.shelf, p.index - 1)) {
+            return true;
+        }
+        if (addProduct(product, p.section, p.shelf, p.index + 1)) {
             return true;
         }
 
-        // TODO
+        // Place on the same shelf
+        pNew = sections[p.section, p.shelf].addProduct(product);
+        if (pNew.index != -1) {
+            sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
+            return true;
+        }
 
+        // Place on closeby shelves in the same section
+        pNew = sections[p.section, p.shelf + 1].addProduct(product);
+        if (pNew.index != -1) {
+            sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
+            return true;
+        }
+        pNew = sections[p.section, p.shelf - 1].addProduct(product);
+        if (pNew.index != -1) {
+            sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
+            return true;
+        }
+
+        // Place in closeby sections
+        pNew = sections[p.section + 1].addProduct(product);
+        if (pNew.index != -1) {
+            sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
+            return true;
+        }
+        pNew = sections[p.section - 1].addProduct(product);
+        if (pNew.index != -1) {
+            sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
+            return true;
+        }
     }
     
     return addProduct(product);
