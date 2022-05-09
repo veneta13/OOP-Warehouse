@@ -29,7 +29,7 @@ Shelf& Shelf::operator=(Shelf const& other) {
 
 Shelf::~Shelf() {
     capacity = 0;
-    delete[] products;
+    if (products != nullptr) { delete[] products; }
     products = nullptr;
 }
 
@@ -108,6 +108,5 @@ Placement Shelf::addProduct(Product product) {
 
 
 void Shelf::removeProduct(int index) {
-    delete &products[index];
     products[index] = Product();
 }
