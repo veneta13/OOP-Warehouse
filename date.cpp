@@ -41,7 +41,7 @@ Date::~Date() {
 
 
 bool Date::validate() {
-    if (day < 0 || month < 0 || day > 31 || month > 12) {
+    if (day < 0 || month < 0 || day > 31 || month > 12 || year < 0) {
         return false;
     }
 
