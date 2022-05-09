@@ -1,7 +1,8 @@
 #include "dyn_array.hpp"
+#include "product.hpp"
 
 template<class T>
-DynArray<T>::DynArray(int capacity = 10) : capacity(capacity) {
+DynArray<T>::DynArray(int capacity) : capacity(capacity) {
     elements = new T[capacity];
     count = 0;
 }
@@ -114,3 +115,6 @@ template <class T>
 int DynArray<T>::size() const {
     return count;
 }
+
+template class DynArray<Product*>;
+template class DynArray<char const*>;
