@@ -6,9 +6,9 @@
 #include <cstring>
 
 class Product {
-    char* name;
-    char* manufacturer;
-    char* comment;
+    char* name = nullptr;
+    char* manufacturer = nullptr;
+    char* comment = nullptr;
 
     int quantity;
 
@@ -19,7 +19,8 @@ class Product {
 
 public:
     Product();
-    Product(char const* name, char const* manufacturer, char const* comment, int quantity, Date expirationDate, Date stockedDate, Placement placement);
+    Product(const char *name, const char *manufacturer, const char *comment, int quantity, const Date &expirationDate,
+            const Date &stockedDate, const Placement &placement);
     Product(Product const& other);
     Product& operator=(Product const& other);
     ~Product();
@@ -33,9 +34,9 @@ public:
     void setManufacturer(char const* _manufacturer);
     void setComment(char const* _comment);
     void setQuantity(int _quantity);
-    void setExpirationDate(Date _expirationDate);
-    void setStockedDate(Date _stockedDate);
-    void setPlacement(Placement _placement);
+    void setExpirationDate(Date const& _expirationDate);
+    void setStockedDate(Date const& _stockedDate);
+    void setPlacement(Placement const& _placement);
     void setIndex(int _index);
     void setShelf(int _shelf);
     void setSection(int _section);

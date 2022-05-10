@@ -1,9 +1,6 @@
 #include "product.hpp"
 
-Product::Product() {
-    name = nullptr;
-    manufacturer = nullptr;
-    comment = nullptr;
+Product::Product() : name(nullptr), manufacturer(nullptr), comment(nullptr) {
     quantity = 0;
     expirationDate = Date();
     stockedDate = Date();
@@ -11,7 +8,8 @@ Product::Product() {
 }
 
 
-Product::Product(char const* name, char const* manufacturer, char const* comment, int quantity, Date expirationDate, Date stockedDate, Placement placement) {
+Product::Product(char const* name, char const* manufacturer, char const* comment, int quantity,
+                 Date const& expirationDate, Date const& stockedDate, Placement const& placement) {
     setName(name);
     setManufacturer(manufacturer);
     setComment(comment);
@@ -67,7 +65,7 @@ Product::~Product() {
 
 void Product::setName(char const* _name) {
     if (_name == nullptr) { return; }
-    if (name != nullptr) { delete[] name; }
+    delete[] name;
     name = new char[strlen(_name) + 1];
     strcpy(name, _name);
 }
@@ -75,7 +73,7 @@ void Product::setName(char const* _name) {
 
 void Product::setManufacturer(char const* _manufacturer) {
     if (_manufacturer == nullptr) { return; }
-    if (manufacturer != nullptr) { delete[] manufacturer; }
+    delete[] manufacturer;
     manufacturer = new char[strlen(_manufacturer) + 1];
     strcpy(manufacturer, _manufacturer);
 }
@@ -83,7 +81,7 @@ void Product::setManufacturer(char const* _manufacturer) {
 
 void Product::setComment(char const* _comment) {
     if (_comment == nullptr) { return; }
-    if (comment != nullptr) { delete[] comment; }
+    delete[] comment;
     comment = new char[strlen(_comment) + 1];
     strcpy(comment, _comment);
 }
@@ -94,17 +92,17 @@ void Product::setQuantity(int _quantity) {
 }
 
 
-void Product::setExpirationDate(Date _expirationDate) {
+void Product::setExpirationDate(Date const& _expirationDate) {
     expirationDate = _expirationDate;
 }
 
 
-void Product::setStockedDate(Date _stockedDate) {
+void Product::setStockedDate(Date const& _stockedDate) {
     stockedDate = _stockedDate;
 }
 
 
-void Product::setPlacement(Placement _placement) {
+void Product::setPlacement(Placement const& _placement) {
     placement = _placement;
 }
 
