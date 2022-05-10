@@ -41,20 +41,23 @@ void Warehouse::copySections(Section* others) {
 }
 
 
-int Warehouse::sortAndCount(DynArray<Product*> products) {
+void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) const {
+    for (int i = 0; i < products.size(); i++) {
+        out << *products[i] << "\n";
+    }
+}
+
+
+int Warehouse::sortAndCount(DynArray<Product*> products) const {
     int quantitySum = 0;
-    for (int i = 0; i < products.size() - 1; i++) 
-    { 
-        int minIndex = i; 
+    for (int i = 0; i < products.size() - 1; i++) {
+        int minIndex = i;
         for (int j = i + 1; j < products.size(); j++) {
             if (products[j] < products[minIndex]) {
                 minIndex = j; 
             }
         }
-
-        Product* temp = products[i];
-        products[i] = products[minIndex];
-        products[minIndex] = temp;
+        products.swap(i, minIndex);
         quantitySum += products[i]->getQuantity();
     }
     quantitySum += products[products.size()-1]->getQuantity();
@@ -62,69 +65,32 @@ int Warehouse::sortAndCount(DynArray<Product*> products) {
 }
 
 
-void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) {
-    for (int i = 0; i < products.size(); i++) {
-        out << products[i]->getName() << "\nCOUNT: "
-            << products[i]->getQuantity() << "\nDETAILS:\n"
-            << products[i]->getManufacturer() << " \n "
-            << products[i]->getPlacement().index << " SHELF "
-            << products[i]->getPlacement().shelf << " SECTION "
-            << products[i]->getPlacement().section << "\n EXP:"
-            << products[i]->getExpirationDate().day << "/"
-            << products[i]->getExpirationDate().month << "/"
-            << products[i]->getExpirationDate().year << " STOCK:"
-            << products[i]->getStockedDate().day << "/"
-            << products[i]->getStockedDate().month << "/"
-            << products[i]->getStockedDate().year << "\nNOTES:"
-            << products[i]->getComment() << "\n";
-    }
-}
-
-
-bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int productCount, DynArray<Product*>& products) {
+bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int productCount,
+                                     DynArray<Product*>& products) const {
     char response;
     out << "! Only " << productCount << " products available:\n";
     printProducts(out, products);
-    out << "\nDo you want to remove anyway? y/n";
-    in.clear();
+    out << "\nDo you want to remove anyway? y/n\n";
     in >> response;
-    if (!response == 'y') { 
+    if (response == 'y') {
         return false;
     }
     return true;
 }
 
-
-void Warehouse::operator<<(std::ostream& out) {
-    DynArray<const char*> listed(10);
-
-    for (int i = 0; i < capacity; i++) { // section counter
-        for (int j = 0; j < sections[i].getCapacity(); j++) { // shelf counter
-            for (int k = 0; k < sections[i][j].getCapacity(); k++) { // index counter
-                bool visited = false;
-                
-                for (int l = 0; l < listed.size(); l++) {
-                    if (strcmp(listed[l], sections[i][j][k].getName()) == 0){
-                        visited = true;
-                        break;
-                    }
-                }
-
-                if (!visited) {
-                    listed.push(sections[i][j][k].getName());
-                    DynArray<Product*> products(10);
-                    findAllByName(sections[i][j][k].getName(), products);
-                    int count = sortAndCount(products);
-                    printProducts(out, products);
-                    out << "\n * * * COUNT: " << count << "\n";
-                }
-            }
-        }
-    }
+Section& Warehouse::operator[](int index) {
+    return sections[index];
 }
 
 
-Product* Warehouse::findEqual(char const* name, Date date) {
+bool Warehouse::setSectionCapacity(int index, int sectionCapacity) {
+    if (index < 0 || index > capacity - 1) { return false; }
+    sections[index] = Section(sectionCapacity);
+    return true;
+}
+
+
+Product* Warehouse::findEqual(char const* name, Date const& date) {
     Product* found = nullptr;
     for (int i = 0; i < capacity && !found; i++) {
         found = sections[i].findEqual(name, date);
@@ -133,31 +99,21 @@ Product* Warehouse::findEqual(char const* name, Date date) {
 }
 
 
-void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) {
+void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
     }
 }
 
 
-void Warehouse::findAllByDate(Date date, DynArray<Product*>& results) {
+void Warehouse::findAllByDate(Date const& date, DynArray<Product*>& results) {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByDate(date, results);
     }
 }
 
 
-bool Warehouse::addProduct(Product product, int sectionIndex, int shelfIndex, int index) {
-    if (sectionIndex < 0 || sectionIndex > capacity - 1) { return false; }
-    if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
-        sections[sectionIndex][shelfIndex][index].setPlacement(Placement{sectionIndex, shelfIndex, index});
-        return true;
-    }
-    return false;
-}
-
-
-bool Warehouse::addProduct(Product product) {
+bool Warehouse::addProduct(Product const& product) {
     for (int i = 0; i < capacity; i++) {
         Placement p = sections[i].addProduct(product);
 
@@ -172,7 +128,7 @@ bool Warehouse::addProduct(Product product) {
 
 
 void Warehouse::removeProduct(int sectionIndex,int shelfIndex, int index) {
-    sections[sectionIndex].removeProduct(shelfIndex,index);
+    sections[sectionIndex].removeProduct(shelfIndex, index);
 }
 
 
@@ -203,7 +159,17 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
 }
 
 
-bool Warehouse::insertProduct(Product product) {
+bool Warehouse::addProduct(Product const& product, int sectionIndex, int shelfIndex, int index) {
+    if (sectionIndex < 0 || sectionIndex > capacity - 1) { return false; }
+    if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
+        sections[sectionIndex][shelfIndex][index].setPlacement(Placement{sectionIndex, shelfIndex, index});
+        return true;
+    }
+    return false;
+}
+
+
+bool Warehouse::restock(Product const& product) {
     Product* found = findEqual(product.getName(), product.getExpirationDate());
 
     if (found) {
@@ -224,7 +190,7 @@ bool Warehouse::insertProduct(Product product) {
             return true;
         }
 
-        // Place on closeby shelves in the same section
+        // Place on close by shelves in the same section
         pNew = sections[p.section, p.shelf + 1].addProduct(product);
         if (pNew.index != -1) {
             sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
@@ -236,7 +202,7 @@ bool Warehouse::insertProduct(Product product) {
             return true;
         }
 
-        // Place in closeby sections
+        // Place in close by sections
         pNew = sections[p.section + 1].addProduct(product);
         if (pNew.index != -1) {
             sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
@@ -253,8 +219,42 @@ bool Warehouse::insertProduct(Product product) {
 }
 
 
-void Warehouse::cleanup(std::ostream& file, Date date) {
+void Warehouse::cleanup(std::ostream& file, Date const& date) {
     DynArray<Product*> products(10);
     findAllByDate(date, products);
     printProducts(file, products);
+}
+
+
+std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
+    DynArray<Product *> listed(10);
+
+    for (int i = 0; i < w.capacity; i++) { // section counter
+        for (int j = 0; j < w.sections[i].getCapacity(); j++) { // shelf counter
+            for (int k = 0; k < w.sections[i][j].getCapacity(); k++) { // index counter
+                if (w.sections[i][j][k].getQuantity() == 0) { continue; }
+
+                bool visited = false;
+
+                for (int l = 0; l < listed.size() && !visited; l++) {
+                    if (w.sections[i][j][k].hasSameName(*listed[l])){
+                        visited = true;
+                    }
+                }
+
+                if (!visited) {
+                    listed.push(&w.sections[i][j][k]);
+
+                    DynArray<Product*> products(10);
+                    w.findAllByName(w.sections[i][j][k].getName(), products);
+                    int count = w.sortAndCount(products);
+
+                    w.printProducts(out, products);
+                    out << "\n----- COUNT: " << count << "\n";
+                }
+            }
+        }
+    }
+
+    return out;
 }
