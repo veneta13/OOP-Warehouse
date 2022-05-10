@@ -51,6 +51,8 @@ public:
     int getIndex() const;
     int getShelf() const;
     int getSection() const;
+
+    friend std::ostream& operator<<(std::ostream& out, Product const& p);
 };
 
 #endif
