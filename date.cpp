@@ -135,3 +135,8 @@ bool Date::operator<=(Date const& other) const {
 bool Date::isValid() const {
     return valid;
 }
+
+std::ostream& operator<<(std::ostream& out, Date const& d) {
+    out << d.day << "/" << d.month << "/" << d.year;
+    return out;
+}
