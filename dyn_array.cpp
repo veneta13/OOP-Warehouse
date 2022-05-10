@@ -10,6 +10,7 @@ DynArray<T>::DynArray(int capacity) : capacity(capacity) {
 
 template<class T>
 DynArray<T>::DynArray(const DynArray<T>& other) {
+    elements = nullptr;
     copyOther(other);
 }
 
