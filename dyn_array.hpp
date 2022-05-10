@@ -25,6 +25,8 @@ public:
     void erase(int index);
     void pop();
 
+    bool swap(int a, int b);
+
     int size() const;
 };
 

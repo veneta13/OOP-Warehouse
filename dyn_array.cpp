@@ -116,5 +116,18 @@ int DynArray<T>::size() const {
     return count;
 }
 
+template<class T>
+bool DynArray<T>::swap(int a, int b) {
+    if (a < 0 || b < 0 || a > count - 1 || b > count - 1) {
+        return false;
+    }
+    if (a != b) {
+        T temp = elements[b];
+        elements[b] = elements[a];
+        elements[a] = temp;
+    }
+    return true;
+}
+
 template class DynArray<Product*>;
 template class DynArray<char const*>;
