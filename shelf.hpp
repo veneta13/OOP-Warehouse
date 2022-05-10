@@ -7,7 +7,6 @@ class Shelf : public Container {
     Product* products;
 
     void copyProducts(Product* others);
-    void initialize();
 
 public:
     Shelf();
@@ -19,7 +18,7 @@ public:
     Product& operator[](int index);
 
     Product* findByName(char const* name) const;
-    Product* findEqual(char const* name, Date date) const;
+    Product* findEqual(char const* name, Date const& date) const;
     void findAllByName(const char* name, DynArray<Product*>& results) const;
     void findAllByDate(Date const& date, DynArray<Product*>& results) const;
 

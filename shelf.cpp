@@ -18,7 +18,7 @@ Shelf::Shelf(Shelf const& other) : Container(other.capacity) {
 
 Shelf& Shelf::operator=(Shelf const& other) {
     if (this != &other) {
-        if (products != nullptr) { delete[] products; }
+        delete[] products;
         capacity = other.capacity;
         products = new Product[other.capacity];
         copyProducts(other.products);
@@ -29,7 +29,7 @@ Shelf& Shelf::operator=(Shelf const& other) {
 
 Shelf::~Shelf() {
     capacity = 0;
-    if (products != nullptr) { delete[] products; }
+    delete[] products;
     products = nullptr;
 }
 
@@ -48,7 +48,7 @@ Product& Shelf::operator[](int index) {
 }
 
 
-Product* Shelf::findEqual(char const* name, Date date) const {
+Product* Shelf::findEqual(char const* name, Date const& date) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
         if ((strcmp(products[i].getName(), name) == 0) && products[i].getExpirationDate() == date) {
