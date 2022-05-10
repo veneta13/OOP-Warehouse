@@ -18,10 +18,10 @@ public:
 
     Product& operator[](int index);
 
-    Product* findByName(char const* name);
-    Product* findEqual(char const* name, Date date);
-    void findAllByName(const char* name, DynArray<Product*>& results);
-    void findAllByDate(Date const& date, DynArray<Product*>& results);
+    Product* findByName(char const* name) const;
+    Product* findEqual(char const* name, Date date) const;
+    void findAllByName(const char* name, DynArray<Product*>& results) const;
+    void findAllByDate(Date const& date, DynArray<Product*>& results) const;
 
     bool addProduct(Product const& product, int index, bool replace = false);
     Placement addProduct(Product const& product);

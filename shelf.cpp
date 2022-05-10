@@ -48,7 +48,7 @@ Product& Shelf::operator[](int index) {
 }
 
 
-Product* Shelf::findEqual(char const* name, Date date) {
+Product* Shelf::findEqual(char const* name, Date date) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
         if ((strcmp(products[i].getName(), name) == 0) && products[i].getExpirationDate() == date) {
@@ -59,7 +59,7 @@ Product* Shelf::findEqual(char const* name, Date date) {
 }
 
 
-Product* Shelf::findByName(char const* name) {
+Product* Shelf::findByName(char const* name) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
         if (products[i].getQuantity() != 0 && strcmp(products[i].getName(), name) == 0) {
@@ -70,7 +70,7 @@ Product* Shelf::findByName(char const* name) {
 }
 
 
-void Shelf::findAllByName(const char* name, DynArray<Product*>& results) {
+void Shelf::findAllByName(const char* name, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
         if (products[i].getQuantity() != 0 && strcmp(products[i].getName(), name) == 0) {
@@ -80,7 +80,7 @@ void Shelf::findAllByName(const char* name, DynArray<Product*>& results) {
 }
 
 
-void Shelf::findAllByDate(Date const& date, DynArray<Product*>& results) {
+void Shelf::findAllByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
         if (products[i].getQuantity() != 0 && products[i].getExpirationDate() <= date) {
