@@ -201,7 +201,7 @@ int Product::getSection() const {
 std::ostream& operator<<(std::ostream& out, Product const& p) {
     out << p.getName() << "\nDETAILS:\nCOUNT "
         << p.getQuantity() << "\nMANUFACTURER "
-        << p.getManufacturer() << " \nINDEX "
+        << p.getManufacturer() << "\nINDEX "
         << p.getPlacement().index << " SHELF "
         << p.getPlacement().shelf << " SECTION "
         << p.getPlacement().section << "\nEXP:"
