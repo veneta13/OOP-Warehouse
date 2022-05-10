@@ -22,7 +22,7 @@ struct Date {
 
 private:
     bool valid;
-    bool validate();
+    bool validate() const;
 };
 
 #endif

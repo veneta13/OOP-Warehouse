@@ -40,7 +40,7 @@ Date::~Date() {
 }
 
 
-bool Date::validate() {
+bool Date::validate() const {
     if (day < 1 || month < 1 || day > 31 || month > 12 || year < 0) {
         return false;
     }
