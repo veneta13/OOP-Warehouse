@@ -26,6 +26,8 @@ public:
     Placement addProduct(Product const& product);
 
     void removeProduct(int index);
+
+    friend std::ostream& operator<<(std::ostream& out, Shelf const& s);
 };
 
 #endif

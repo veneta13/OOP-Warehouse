@@ -112,3 +112,11 @@ Placement Shelf::addProduct(Product const& product) {
 void Shelf::removeProduct(int index) {
     products[index].setQuantity(0);
 }
+
+std::ostream& operator<<(std::ostream& out, Shelf const& s) {
+    for (int i = 0; i < s.capacity; i++) {
+        if (s.products[i].getQuantity() == 0) { continue; }
+        out << s.products[i] << "\n";
+    }
+    return out;
+}
