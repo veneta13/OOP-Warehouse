@@ -74,6 +74,8 @@ T& DynArray<T>::operator[](int index) {
 
 template <class T>
 void DynArray<T>::insert(T element, int index) {
+    if (index > capacity - 1) { return; }
+
     if (count == capacity) {
         doubleSpace();
     }
@@ -99,6 +101,8 @@ void DynArray<T>::push(T element) {
 
 template<class T>
 void DynArray<T>::erase(int index) {
+    if (index > capacity - 1) { return; }
+
     for (int i = index; i < count - 1; i++) {
         elements[i] = elements[i + 1];
     }

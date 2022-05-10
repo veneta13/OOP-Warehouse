@@ -20,6 +20,179 @@ Date dummyDate3(26, 4, 2020);
 Placement dummyPlacement1({1, 2, 3});
 Placement dummyPlacement2({7, 8, 9});
 
+TEST_CASE("Dynamic array tests")
+{
+    SECTION("Constructor with parameter")
+    {
+        DynArray<const char*> array(3);
+        REQUIRE(array.size() == 0);
+    }
+
+    SECTION("Copy constructor")
+    {
+        DynArray<const char*> array(3);
+        const char* str = "my string";
+        array.push(str);
+
+        REQUIRE(strcmp(array[0], str) == 0);
+        REQUIRE(array.size() == 1);
+
+        DynArray<const char*> arrCopy(array);
+        REQUIRE(strcmp(arrCopy[0], str) == 0);
+        REQUIRE(arrCopy.size() == 1);
+    }
+
+    SECTION("Operator =")
+    {
+        DynArray<const char*> array(3);
+        const char* str = "my string";
+        array.push(str);
+
+        REQUIRE(strcmp(array[0], str) == 0);
+        REQUIRE(array.size() == 1);
+
+        DynArray<const char*> arrCopy = array;
+        REQUIRE(strcmp(arrCopy[0], str) == 0);
+        REQUIRE(arrCopy.size() == 1);
+    }
+
+    SECTION("Operator []")
+    {
+        DynArray<const char*> array(3);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+
+        array.push(str1);
+        array.push(str2);
+
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+    }
+
+    SECTION("Operator []")
+    {
+        DynArray<const char*> array(3);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+
+        array.push(str1);
+        array.push(str2);
+
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+    }
+
+    SECTION("Insert")
+    {
+        DynArray<const char*> array(3);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+
+        array.insert(str1, 0);
+        array.insert(str2, 2);
+
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[2], str2) == 0);
+    }
+
+    SECTION("Push")
+    {
+        DynArray<const char*> array(4);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+        const char* str3 = "another string";
+
+        array.push(str1);
+        array.push(str2);
+        array.push(str3);
+
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+        REQUIRE(strcmp(array[2], str3) == 0);
+    }
+
+    SECTION("Erase")
+    {
+        DynArray<const char*> array(4);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+        const char* str3 = "another string";
+
+        array.push(str1);
+        array.push(str2);
+        array.push(str3);
+
+        REQUIRE(array.size() == 3);
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+        REQUIRE(strcmp(array[2], str3) == 0);
+
+        array.erase(2);
+        REQUIRE(array.size() == 2);
+
+        array.erase(1);
+        REQUIRE(array.size() == 1);
+
+        array.erase(0);
+        REQUIRE(array.size() == 0);
+    }
+
+    SECTION("Pop")
+    {
+        DynArray<const char*> array(4);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+        const char* str3 = "another string";
+
+        array.push(str1);
+        array.push(str2);
+        array.push(str3);
+
+        REQUIRE(array.size() == 3);
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+        REQUIRE(strcmp(array[2], str3) == 0);
+
+        array.pop();
+        REQUIRE(array.size() == 2);
+
+        array.pop();
+        REQUIRE(array.size() == 1);
+
+        array.pop();
+        REQUIRE(array.size() == 0);
+    }
+
+    SECTION("Swap")
+    {
+        DynArray<const char*> array(4);
+        const char* str1 = "my string";
+        const char* str2 = "other string";
+        const char* str3 = "another string";
+
+        array.push(str1);
+        array.push(str2);
+        array.push(str3);
+
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str2) == 0);
+        REQUIRE(strcmp(array[2], str3) == 0);
+
+        REQUIRE(array.swap(1, 2));
+        REQUIRE(strcmp(array[0], str1) == 0);
+        REQUIRE(strcmp(array[1], str3) == 0);
+        REQUIRE(strcmp(array[2], str2) == 0);
+
+        REQUIRE(array.swap(0, 2));
+        REQUIRE(strcmp(array[0], str2) == 0);
+        REQUIRE(strcmp(array[1], str3) == 0);
+        REQUIRE(strcmp(array[2], str1) == 0);
+
+        REQUIRE(!array.swap(0, 3));
+        REQUIRE(!array.swap(0, -3));
+    }
+}
+
 TEST_CASE("Date tests")
 {
     SECTION("Default constructor")
