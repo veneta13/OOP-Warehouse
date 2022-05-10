@@ -19,13 +19,13 @@ public:
 
     bool setShelfCapacity(int index, int shelfCapacity);
 
-    Product* findByName(char const* name);
-    Product* findEqual(char const* name, Date date);
-    void findAllByName(const char* name, DynArray<Product*>& results);
-    void findAllByDate(Date date, DynArray<Product*>& results);
+    Product* findByName(char const* name) const;
+    Product* findEqual(char const* name, Date const& date) const;
+    void findAllByName(const char* name, DynArray<Product*>& results) const;
+    void findAllByDate(Date const& date, DynArray<Product*>& results) const;
 
-    bool addProduct(Product product, int shelfIndex, int index);
-    Placement addProduct(Product product);
+    bool addProduct(Product const& product, int shelfIndex, int index);
+    Placement addProduct(Product const& product);
 
     void removeProduct(int shelfIndex, int index);
 };

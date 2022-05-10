@@ -53,7 +53,7 @@ bool Section::setShelfCapacity(int index, int shelfCapacity) {
 }
 
 
-Product* Section::findEqual(char const* name, Date date) {
+Product* Section::findEqual(char const* name, Date const& date) const {
     Product* found = nullptr;
     for (int i = 0; i < capacity && !found; i++) {
         found = shelves[i].findEqual(name, date);
@@ -62,7 +62,7 @@ Product* Section::findEqual(char const* name, Date date) {
 }
 
 
-Product* Section::findByName(char const* name) {
+Product* Section::findByName(char const* name) const {
     Product* found = nullptr;
     for (int i = 0; i < capacity && !found; i++) {
         found = shelves[i].findByName(name);
@@ -71,27 +71,27 @@ Product* Section::findByName(char const* name) {
 }
 
 
-void Section::findAllByName(const char* name, DynArray<Product*>& results) {
+void Section::findAllByName(const char* name, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         shelves[i].findAllByName(name, results);
     }
 }
 
 
-void Section::findAllByDate(Date date, DynArray<Product*>& results) {
+void Section::findAllByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         shelves[i].findAllByDate(date, results);
     }
 }
 
 
-bool Section::addProduct(Product product, int shelfIndex, int index) {
+bool Section::addProduct(Product const& product, int shelfIndex, int index) {
     if (shelfIndex < 0 || shelfIndex > capacity - 1) { return false; }
     return shelves[shelfIndex].addProduct(product, index);
 }
 
 
-Placement Section::addProduct(Product product) {
+Placement Section::addProduct(Product const& product) {
     for (int i = 0; i < capacity; i++) {
         Placement p = shelves[i].addProduct(product);
 
