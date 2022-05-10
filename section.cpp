@@ -107,3 +107,11 @@ Placement Section::addProduct(Product const& product) {
 void Section::removeProduct(int shelfIndex, int index) {
     shelves[shelfIndex].removeProduct(index);
 }
+
+
+std::ostream& operator<<(std::ostream& out, Section const& s) {
+    for (int i = 0; i < s.capacity; i++) {
+        out << s.shelves[i];
+    }
+    return out;
+}

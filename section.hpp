@@ -28,6 +28,8 @@ public:
     Placement addProduct(Product const& product);
 
     void removeProduct(int shelfIndex, int index);
+
+    friend std::ostream& operator<<(std::ostream& out, Section const& s);
 };
 
 #endif
