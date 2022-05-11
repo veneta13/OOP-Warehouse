@@ -20,7 +20,8 @@ public:
     Product* findByName(char const* name) const;
     Product* findEqual(char const* name, Date const& date) const;
     void findAllByName(const char* name, DynArray<Product*>& results) const;
-    void findAllByDate(Date const& date, DynArray<Product*>& results) const;
+    void findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const;
+    void findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product*> &results) const;
 
     bool addProduct(Product const& product, int index, bool replace = false);
     Placement addProduct(Product const& product);

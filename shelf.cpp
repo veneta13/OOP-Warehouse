@@ -62,7 +62,7 @@ Product* Shelf::findEqual(char const* name, Date const& date) const {
 Product* Shelf::findByName(char const* name) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
-        if (products[i].getQuantity() != 0 && strcmp(products[i].getName(), name) == 0) {
+        if (strcmp(products[i].getName(), name) == 0) {
             return &products[i];
         }
     }
@@ -73,17 +73,27 @@ Product* Shelf::findByName(char const* name) const {
 void Shelf::findAllByName(const char* name, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
-        if (products[i].getQuantity() != 0 && strcmp(products[i].getName(), name) == 0) {
+        if (strcmp(products[i].getName(), name) == 0) {
             results.push(&products[i]);
         }
     }
 }
 
 
-void Shelf::findAllByDate(Date const& date, DynArray<Product*>& results) const {
+void Shelf::findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         if (products[i].getQuantity() == 0) { continue; }
-        if (products[i].getQuantity() != 0 && products[i].getExpirationDate() <= date) {
+        if (products[i].getExpirationDate() <= date) {
+            results.push(&products[i]);
+        }
+    }
+}
+
+
+void Shelf::findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product *> &results) const {
+    for (int i = 0; i < capacity; i++) {
+        if (products[i].getQuantity() == 0) { continue; }
+        if (products[i].getStockedDate() >= from && products[i].getStockedDate() <= to) {
             results.push(&products[i]);
         }
     }
