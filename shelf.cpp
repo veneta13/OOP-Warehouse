@@ -113,6 +113,9 @@ Placement Shelf::addProduct(Product const& product) {
 /// \param quantity the amount we want to removes1.findEqual(dummyName1, dummyDate1)
 /// \return the removed product (if the removal is unsuccessful -> nullptr)
 Product* Shelf::removeProduct(int index, int quantity) {
+    if (index > capacity - 1 || index < 0) {
+        return nullptr;
+    }
     if (quantity > products[index].getQuantity()) {
         return nullptr;
     }
