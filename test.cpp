@@ -742,40 +742,18 @@ TEST_CASE("Tracker tests")
     SECTION("Default constructor")
     {
         Tracker t1;
-        REQUIRE(*t1.getToday() == Date());
-    }
-
-    SECTION("Constructor with today")
-    {
-        Tracker t1(dummyDate1);
-        REQUIRE(*t1.getToday() == dummyDate1);
     }
 
     SECTION("Copy constructor")
     {
-        Tracker t1(dummyDate1);
+        Tracker t1;
         Tracker t2(t1);
-
-        REQUIRE(*t1.getToday() == dummyDate1);
-        REQUIRE(*t2.getToday() == dummyDate1);
     }
 
     SECTION("Operator =")
     {
-        Tracker t1(dummyDate1);
+        Tracker t1;
         Tracker t2 = t1;
-
-        REQUIRE(*t1.getToday() == dummyDate1);
-        REQUIRE(*t2.getToday() == dummyDate1);
-    }
-
-    SECTION("Today getter and setter")
-    {
-        Tracker t1(dummyDate1);
-
-        REQUIRE(*t1.getToday() == dummyDate1);
-        t1.setToday(dummyDate2);
-        REQUIRE(*t1.getToday() == dummyDate2);
     }
 
     SECTION("Add and search")
@@ -785,7 +763,7 @@ TEST_CASE("Tracker tests")
         Product* p1 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate1, dummyPlacement1);
         Product* p2 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
 
-        Tracker t1(dummyDate1);
+        Tracker t1;
         t1.addRemoved(p1, dummyDate1);
         t1.searchInInterval(dummyDate1, dummyDate3, stocked, cleanedUp);
 

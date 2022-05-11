@@ -1,26 +1,18 @@
 #include "tracker.hpp"
 
-Tracker::Tracker() {
-    today = Date();
+Tracker::Tracker() : Container(0){
     removed = nullptr;
 }
 
 
-Tracker::Tracker(Date const& _date) {
-    today = _date;
-    removed = nullptr;
-}
-
-
-Tracker::Tracker(Tracker const& other) {
-    today = other.today;
+Tracker::Tracker(Tracker const& other) : Container(0) {
     removed = nullptr;
 }
 
 
 Tracker &Tracker::operator=(Tracker const& other) {
     if (this != &other) {
-        today = other.today;
+        delete[] removed;
         removed = nullptr;
     }
     return *this;
@@ -29,12 +21,11 @@ Tracker &Tracker::operator=(Tracker const& other) {
 
 Tracker::~Tracker() {
     delete[] removed;
-    removedCount = 0;
 }
 
 
 int Tracker::getRemovedIndex(const Date &date) {
-    for (int i = 0; i < removedCount; i++) {
+    for (int i = 0; i < capacity; i++) {
         if (removed[i].getDate() == date) {
             return i;
         }
@@ -44,9 +35,9 @@ int Tracker::getRemovedIndex(const Date &date) {
 
 
 void Tracker::addSlotRemoved() {
-    DateIndexer* temp = new DateIndexer[removedCount + 1];
+    DateIndexer* temp = new DateIndexer[capacity + 1];
 
-    for (int i = 0; i < removedCount; i++) {
+    for (int i = 0; i < capacity; i++) {
         temp[i] = removed[i];
     }
 
@@ -56,30 +47,20 @@ void Tracker::addSlotRemoved() {
 }
 
 
-Date* Tracker::getToday() {
-    return &today;
-}
-
-
-void Tracker::setToday(Date const & date) {
-    today = date;
-}
-
-
 void Tracker::addRemoved(Product *product, const Date &dateRemoved) {
     int index = getRemovedIndex(dateRemoved);
     if (index == -1) {
         addSlotRemoved();
-        removed[removedCount].setDate(dateRemoved);
-        removed[removedCount].addProduct(product);
-        removedCount++;
+        removed[capacity].setDate(dateRemoved);
+        removed[capacity].addProduct(product);
+        capacity++;
         return;
     }
 }
 
 void Tracker::searchInInterval(Date const& from, Date const& to,
                       DynArray<Product*>& stocked, DynArray<Product*>& cleanedUp) {
-    for (int i = 0; i < removedCount; i++) {
+    for (int i = 0; i < capacity; i++) {
         bool cleanedUpFlag = removed[i].getDate() >= from && removed[i].getDate() <= to;
         for (int j = 0; j < removed[i].size(); j++) {
             if (cleanedUpFlag) {
