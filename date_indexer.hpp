@@ -20,7 +20,7 @@ public:
     ~DateIndexer();
 
     Date& getDate();
-    Product** getProduct(int index) const;
+    Product* getProduct(int index) const;
     int size() const;
 
     void setDate(Date const& _date);

@@ -77,11 +77,11 @@ Date& DateIndexer::getDate() {
 }
 
 
-Product** DateIndexer::getProduct(int index) const {
+Product* DateIndexer::getProduct(int index) const {
     if (index < 0 || index > productCount - 1) {
         return nullptr;
     }
-    return &products[index];
+    return products[index];
 }
 
 
