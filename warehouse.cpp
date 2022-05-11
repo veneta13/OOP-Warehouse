@@ -126,9 +126,18 @@ bool Warehouse::addProduct(Product const& product) {
     return false;
 }
 
+///
+/// \param sectionIndex the section we want to remove the project from
+/// \param shelfIndex the shelf we want to remove the project from
+/// \param index the index of the product we want to remove
+/// \param quantity the quantity to remove
+/// \return the removed product (if the removal is unsuccessful -> nullptr)
+Product* Warehouse::removeProduct(int sectionIndex, int shelfIndex, int index, int quantity) {
+    if (sectionIndex > capacity - 1 || sectionIndex < 0) {
+        return nullptr;
+    }
 
-void Warehouse::removeProduct(int sectionIndex,int shelfIndex, int index) {
-    sections[sectionIndex].removeProduct(shelfIndex, index);
+    return sections[sectionIndex].removeProduct(shelfIndex, index, quantity);
 }
 
 
@@ -146,11 +155,11 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
         int currentQuantity = products[i]->getQuantity();
 
         if (wanted >= currentQuantity) {
-            removeProduct(p.section, p.shelf, p.index);
+            removeProduct(p.section, p.shelf, p.index, -1);
             wanted -= currentQuantity;
         }
         else {
-            sections[p.section][p.shelf][p.index].setQuantity(currentQuantity - wanted);
+            removeProduct(p.section, p.shelf, p.index, wanted);
             wanted = 0;
         }
     }

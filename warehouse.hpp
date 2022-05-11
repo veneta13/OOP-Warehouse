@@ -30,6 +30,8 @@ public:
     void findAllByDate(Date const& date, DynArray<Product*>& results);
 
     bool addProduct(Product const& product, int sectionIndex, int shelfIndex, int index);
+    Product* removeProduct(int sectionIndex, int shelfIndex, int index, int quantity);
+
     bool restock(Product const& product);
 
     bool takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted);

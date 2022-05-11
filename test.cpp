@@ -1314,6 +1314,37 @@ TEST_CASE("Warehouse tests")
         REQUIRE(result.size() == 6);
     }
 
+    SECTION("Remove product")
+    {
+        Warehouse w1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 3, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 5, dummyDate2, dummyDate2, dummyPlacement1);
+
+        REQUIRE(w1.setSectionCapacity(0, 2));
+        REQUIRE(w1.setSectionCapacity(1, 2));
+
+        REQUIRE(w1[0].setShelfCapacity(0, 1));
+        REQUIRE(w1[0].setShelfCapacity(1, 1));
+        REQUIRE(w1[1].setShelfCapacity(0, 2));
+
+        REQUIRE(w1.addProduct(p1, 1, 0, 0));
+        REQUIRE(w1.restock(p2));
+        REQUIRE(w1[0][0][0] == p2);
+
+        REQUIRE(!w1.removeProduct(5, 0, 0, -1));
+        REQUIRE(!w1.removeProduct(0, 5, 0, -1));
+        REQUIRE(!w1.removeProduct(0, 0, 5, -1));
+
+        Product p3(p1), p4(p1);
+        p3.setQuantity(2);
+        p4.setQuantity(1);
+        REQUIRE(*w1.removeProduct(1, 0, 0, 1) == p1);
+        REQUIRE(w1[1][0][0] == p4);
+
+        REQUIRE(*w1.removeProduct(0, 0, 0, -1) == p2);
+        REQUIRE(w1[0][0][0].getQuantity() == 0);
+    }
+
     SECTION("Restock product")
     {
         Warehouse w1(2);
