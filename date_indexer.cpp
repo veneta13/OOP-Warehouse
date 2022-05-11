@@ -15,6 +15,7 @@ DateIndexer::DateIndexer(Date const& _date) : Container(5) {
 
 
 DateIndexer::DateIndexer(DateIndexer const& other) : Container(other.capacity) {
+    date = other.date;
     productCount = other.productCount;
     products = new Product[capacity];
     copyProducts(other.products);
@@ -24,6 +25,7 @@ DateIndexer::DateIndexer(DateIndexer const& other) : Container(other.capacity) {
 DateIndexer& DateIndexer::operator=(DateIndexer const& other) {
     if (this != &other) {
         delete[] products;
+        date = other.date;
         capacity = other.capacity;
         products = new Product[capacity];
         copyProducts(other.products);

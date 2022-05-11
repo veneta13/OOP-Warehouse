@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include "date_indexer.hpp"
 #include "warehouse.hpp"
 
 #include<sstream>
@@ -644,6 +645,89 @@ TEST_CASE("Container tests")
         Container c2 = c1;
         REQUIRE(c1.getCapacity() == 10);
         REQUIRE(c2.getCapacity() == 10);
+    }
+}
+
+TEST_CASE("DateIndexer tests")
+{
+    SECTION("Default constructor")
+    {
+        DateIndexer d1;
+        REQUIRE(d1.getCapacity() == 5);
+        REQUIRE(d1.size() == 0);
+        REQUIRE(d1.getDate() == Date());
+    }
+
+    SECTION("Constructor with date")
+    {
+        DateIndexer d1(dummyDate1);
+        REQUIRE(d1.getCapacity() == 5);
+        REQUIRE(d1.size() == 0);
+        REQUIRE(d1.getDate() == dummyDate1);
+    }
+
+    SECTION("Copy constructor")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+
+        DateIndexer d1(dummyDate1);
+        d1.addProduct(p1);
+        REQUIRE(d1.getCapacity() == 5);
+        REQUIRE(d1.size() == 1);
+        REQUIRE(*d1.getProduct(0) == p1);
+        REQUIRE(d1.getDate() == dummyDate1);
+
+        DateIndexer d2(d1);
+        REQUIRE(d2.getCapacity() == 5);
+        REQUIRE(d2.size() == 1);
+        REQUIRE(*d2.getProduct(0) == p1);
+        REQUIRE(d2.getDate() == dummyDate1);
+    }
+
+    SECTION("Operator =")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+
+        DateIndexer d1(dummyDate1);
+        d1.addProduct(p1);
+        REQUIRE(d1.getCapacity() == 5);
+        REQUIRE(d1.size() == 1);
+        REQUIRE(*d1.getProduct(0) == p1);
+        REQUIRE(d1.getDate() == dummyDate1);
+
+        DateIndexer d2 = d1;
+        REQUIRE(d2.getCapacity() == 5);
+        REQUIRE(d2.size() == 1);
+        REQUIRE(*d2.getProduct(0) == p1);
+        REQUIRE(d2.getDate() == dummyDate1);
+    }
+
+    SECTION("Resize")
+    {
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        DateIndexer d1(dummyDate1);
+        for (int i = 0; i < 6; i++) {
+            d1.addProduct(p1);
+        }
+
+        REQUIRE(d1.getCapacity() == 10);
+        REQUIRE(d1.size() == 6);
+        REQUIRE(*d1.getProduct(0) == p1);
+        REQUIRE(*d1.getProduct(1) == p1);
+        REQUIRE(*d1.getProduct(2) == p1);
+        REQUIRE(*d1.getProduct(3) == p1);
+        REQUIRE(*d1.getProduct(4) == p1);
+        REQUIRE(*d1.getProduct(5) == p1);
+        REQUIRE(d1.getDate() == dummyDate1);
+    }
+
+    SECTION("Set date")
+    {
+        DateIndexer d1(dummyDate1);
+        REQUIRE(d1.getDate() == dummyDate1);
+
+        d1.setDate(dummyDate2);
+        REQUIRE(d1.getDate() == dummyDate2);
     }
 }
 

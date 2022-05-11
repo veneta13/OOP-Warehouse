@@ -1,7 +1,6 @@
 #ifndef __DATE_INDEXER
 #define __DATE_INDEXER
 
-#include "dyn_array.hpp"
 #include "date.hpp"
 #include "product.hpp"
 #include "container.hpp"
