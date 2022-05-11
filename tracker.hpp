@@ -12,6 +12,7 @@ class Tracker {
     void addSlotRemoved();
 
 public:
+    Tracker();
     Tracker(Date const& _date);
     Tracker(Tracker const& other);
     Tracker& operator=(Tracker const& other);

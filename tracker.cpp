@@ -1,5 +1,11 @@
 #include "tracker.hpp"
 
+Tracker::Tracker() {
+    today = Date();
+    removed = nullptr;
+}
+
+
 Tracker::Tracker(Date const& _date) {
     today = _date;
     removed = nullptr;

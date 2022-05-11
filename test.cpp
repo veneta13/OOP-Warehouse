@@ -739,6 +739,12 @@ TEST_CASE("DateIndexer tests")
 
 TEST_CASE("Tracker tests")
 {
+    SECTION("Default constructor")
+    {
+        Tracker t1;
+        REQUIRE(*t1.getToday() == Date());
+    }
+
     SECTION("Constructor with today")
     {
         Tracker t1(dummyDate1);
