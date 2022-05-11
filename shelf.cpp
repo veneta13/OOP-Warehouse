@@ -108,9 +108,20 @@ Placement Shelf::addProduct(Product const& product) {
     return Placement();
 }
 
+///
+/// \param index the index of the product we want to remove
+/// \param quantity the amount we want to removes1.findEqual(dummyName1, dummyDate1)
+/// \return the removed product (if the removal is unsuccessful -> nullptr)
+Product* Shelf::removeProduct(int index, int quantity) {
+    if (quantity > products[index].getQuantity()) {
+        return nullptr;
+    }
+    quantity = quantity == -1 ? products[index].getQuantity() : quantity;
 
-void Shelf::removeProduct(int index) {
-    products[index].setQuantity(0);
+    Product* copy = new Product(products[index]);
+    copy->setQuantity(quantity);
+    products[index].setQuantity(products[index].getQuantity() - quantity);
+    return copy;
 }
 
 std::ostream& operator<<(std::ostream& out, Shelf const& s) {

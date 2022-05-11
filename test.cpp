@@ -783,7 +783,7 @@ TEST_CASE("Shelf tests")
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
         Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate2, dummyPlacement2);
-        Product p3(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p3(dummyName1, dummyManufacturer2, dummyComment1, 3, dummyDate1, dummyDate2, dummyPlacement2);
 
         REQUIRE(s1.findEqual(dummyName1, dummyDate1) == nullptr);
 
@@ -793,9 +793,19 @@ TEST_CASE("Shelf tests")
         REQUIRE(s1.addProduct(p1, 1, true));
         REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
 
-        s1.removeProduct(1);
+        REQUIRE(*s1.removeProduct(1, -1) == p1);
+        REQUIRE(!s1.findEqual(dummyName1, dummyDate1));
 
         REQUIRE(s1.addProduct(p3, 2, true));
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p3);
+
+        Product p4(p3);
+        p4.setQuantity(2);
+        REQUIRE(*s1.removeProduct(2, 2) == p4);
+        p3.setQuantity(1);
+        REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p3);
+
+        REQUIRE(!s1.removeProduct(2, 5));
         REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p3);
     }
 
