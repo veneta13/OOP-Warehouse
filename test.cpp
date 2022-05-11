@@ -1019,7 +1019,7 @@ TEST_CASE("Section tests")
 
         REQUIRE(c1.findByName(dummyName1));
 
-        c1.removeProduct(0, 0);
+        REQUIRE(*c1.removeProduct(0, 0, -1) == p1);
 
         REQUIRE(!c1.findByName(dummyName1));
     }

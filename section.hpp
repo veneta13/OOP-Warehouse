@@ -27,7 +27,7 @@ public:
     bool addProduct(Product const& product, int shelfIndex, int index);
     Placement addProduct(Product const& product);
 
-    void removeProduct(int shelfIndex, int index);
+    Product* removeProduct(int shelfIndex, int index, int quantity);
 
     friend std::ostream& operator<<(std::ostream& out, Section const& s);
 };

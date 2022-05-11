@@ -103,9 +103,17 @@ Placement Section::addProduct(Product const& product) {
     return Placement();
 }
 
+///
+/// \param shelfIndex the shelf we want to remove the project from
+/// \param index the index of the product we want to remove
+/// \param quantity the quantity to remove
+/// \return the removed product (if the removal is unsuccessful -> nullptr)
+Product* Section::removeProduct(int shelfIndex, int index, int quantity) {
+    if (shelfIndex > capacity - 1 || shelfIndex < 0) {
+        return nullptr;
+    }
 
-void Section::removeProduct(int shelfIndex, int index) {
-    shelves[shelfIndex].removeProduct(index);
+    return shelves[shelfIndex].removeProduct(index, quantity);
 }
 
 
