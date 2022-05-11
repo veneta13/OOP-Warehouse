@@ -78,9 +78,16 @@ void Section::findAllByName(const char* name, DynArray<Product*>& results) const
 }
 
 
-void Section::findAllByDate(Date const& date, DynArray<Product*>& results) const {
+void Section::findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
-        shelves[i].findAllByDate(date, results);
+        shelves[i].findAllExpiredByDate(date, results);
+    }
+}
+
+
+void Section::findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product*> &results) const {
+    for (int i = 0; i < capacity; i++) {
+        shelves[i].findAllStockedBetweenDates(from, to, results);
     }
 }
 
