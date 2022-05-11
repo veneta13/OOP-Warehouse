@@ -8,9 +8,8 @@
 class DateIndexer : public Container {
     Date date;
     int productCount;
-    Product* products;
+    Product** products;
 
-    void copyProducts(Product *others);
     void resize();
 
 public:
@@ -21,11 +20,11 @@ public:
     ~DateIndexer();
 
     Date& getDate();
-    Product* getProduct(int index) const;
+    Product** getProduct(int index) const;
     int size() const;
 
     void setDate(Date const& _date);
-    void addProduct(const Product &product);
+    void addProduct(Product* product);
 };
 
 #endif

@@ -668,7 +668,7 @@ TEST_CASE("DateIndexer tests")
 
     SECTION("Copy constructor")
     {
-        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p1 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
 
         DateIndexer d1(dummyDate1);
         d1.addProduct(p1);
@@ -679,14 +679,13 @@ TEST_CASE("DateIndexer tests")
 
         DateIndexer d2(d1);
         REQUIRE(d2.getCapacity() == 5);
-        REQUIRE(d2.size() == 1);
-        REQUIRE(*d2.getProduct(0) == p1);
+        REQUIRE(d2.size() == 0);
         REQUIRE(d2.getDate() == dummyDate1);
     }
 
     SECTION("Operator =")
     {
-        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p1 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
 
         DateIndexer d1(dummyDate1);
         d1.addProduct(p1);
@@ -697,27 +696,35 @@ TEST_CASE("DateIndexer tests")
 
         DateIndexer d2 = d1;
         REQUIRE(d2.getCapacity() == 5);
-        REQUIRE(d2.size() == 1);
-        REQUIRE(*d2.getProduct(0) == p1);
+        REQUIRE(d2.size() == 0);
         REQUIRE(d2.getDate() == dummyDate1);
     }
 
     SECTION("Resize")
     {
-        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p1 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p2 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p3 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p4 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p5 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+        Product* p6 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate2, dummyPlacement1);
+
         DateIndexer d1(dummyDate1);
-        for (int i = 0; i < 6; i++) {
-            d1.addProduct(p1);
-        }
+        d1.addProduct(p1);
+        d1.addProduct(p2);
+        d1.addProduct(p3);
+        d1.addProduct(p4);
+        d1.addProduct(p5);
+        d1.addProduct(p6);
 
         REQUIRE(d1.getCapacity() == 10);
         REQUIRE(d1.size() == 6);
         REQUIRE(*d1.getProduct(0) == p1);
-        REQUIRE(*d1.getProduct(1) == p1);
-        REQUIRE(*d1.getProduct(2) == p1);
-        REQUIRE(*d1.getProduct(3) == p1);
-        REQUIRE(*d1.getProduct(4) == p1);
-        REQUIRE(*d1.getProduct(5) == p1);
+        REQUIRE(*d1.getProduct(1) == p2);
+        REQUIRE(*d1.getProduct(2) == p3);
+        REQUIRE(*d1.getProduct(3) == p4);
+        REQUIRE(*d1.getProduct(4) == p5);
+        REQUIRE(*d1.getProduct(5) == p6);
         REQUIRE(d1.getDate() == dummyDate1);
     }
 
@@ -877,7 +884,9 @@ TEST_CASE("Shelf tests")
         REQUIRE(s1.addProduct(p1, 1, true));
         REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p1);
 
-        REQUIRE(*s1.removeProduct(1, -1) == p1);
+        Product* ptr = s1.removeProduct(1, -1);
+        REQUIRE(*ptr == p1);
+        delete ptr;
         REQUIRE(!s1.findEqual(dummyName1, dummyDate1));
 
         REQUIRE(s1.addProduct(p3, 2, true));
@@ -885,7 +894,9 @@ TEST_CASE("Shelf tests")
 
         Product p4(p3);
         p4.setQuantity(2);
-        REQUIRE(*s1.removeProduct(2, 2) == p4);
+        ptr = s1.removeProduct(2, 2);
+        REQUIRE(*ptr == p4);
+        delete ptr;
         p3.setQuantity(1);
         REQUIRE(*s1.findEqual(dummyName1, dummyDate1) == p3);
 
@@ -1103,7 +1114,9 @@ TEST_CASE("Section tests")
 
         REQUIRE(c1.findByName(dummyName1));
 
-        REQUIRE(*c1.removeProduct(0, 0, -1) == p1);
+        Product* ptr = c1.removeProduct(0, 0, -1);
+        REQUIRE(*ptr == p1);
+        delete ptr;
 
         REQUIRE(!c1.findByName(dummyName1));
     }
@@ -1422,10 +1435,14 @@ TEST_CASE("Warehouse tests")
         Product p3(p1), p4(p1);
         p3.setQuantity(2);
         p4.setQuantity(1);
-        REQUIRE(*w1.removeProduct(1, 0, 0, 1) == p1);
+        Product* ptr = w1.removeProduct(1, 0, 0, 1);
+        REQUIRE(*ptr == p1);
+        delete ptr;
         REQUIRE(w1[1][0][0] == p4);
 
-        REQUIRE(*w1.removeProduct(0, 0, 0, -1) == p2);
+        ptr = w1.removeProduct(0, 0, 0, -1);
+        REQUIRE(*ptr == p2);
+        delete ptr;
         REQUIRE(w1[0][0][0].getQuantity() == 0);
     }
 
