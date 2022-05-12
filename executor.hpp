@@ -1,14 +1,13 @@
 #ifndef STACK_EXECUTOR_HPP
 #define STACK_EXECUTOR_HPP
 
-
-#include "warehouse.hpp"
+#include "file_manager.hpp"
 
 #include <fstream>
 
 class Executor {
-    int commandCodes[6];
     Warehouse warehouse;
+    FileManager fileManager;
 
     void list(std::ostream& out);
     void addProduct(std::ostream& out, std::istream& in);
@@ -21,7 +20,12 @@ class Executor {
     void readDate(Date& date, std::ostream& out, std::istream& in);
 
 public:
-    void setToday();
+    Executor();
+    Executor(Executor const& other);
+    Executor& operator=(Executor const& other);
+    ~Executor();
+
+    void setToday(std::ostream& out, std::istream& in);
     bool enter(std::ostream& out, std::istream& in);
 };
 

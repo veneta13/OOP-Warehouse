@@ -95,14 +95,14 @@ void FileManager::writeWarehouseParams(std::ostream& out, Warehouse& w) const {
     out << w.getCapacity() << "\n";
 
     for (int i = 0; i < w.getCapacity(); i++) {
-        out << w[i].getCapacity() << " ";
+        out << " " << w[i].getCapacity();
     }
 
     out << "\n";
 
     for (int i = 0; i < w.getCapacity(); i++) {
         for (int j = 0; j < w[i].getCapacity(); j++) {
-            out << w[i][j].getCapacity() << " ";
+            out << " " << w[i][j].getCapacity();
         }
     }
 

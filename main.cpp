@@ -3,7 +3,7 @@
 
 int main() {
     Executor executor;
-    executor.setToday();
+    executor.setToday(std::cout, std::cin);
     while (executor.enter(std::cout, std::cin)) {}
     return 0;
 }

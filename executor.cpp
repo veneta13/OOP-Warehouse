@@ -1,5 +1,24 @@
 #include "executor.hpp"
 
+Executor::Executor() {}
+
+
+Executor::Executor(Executor const& other) {
+    warehouse = other.warehouse;
+}
+
+
+Executor& Executor::operator=(Executor const& other) {
+    if (this != &other) {
+        warehouse = other.warehouse;
+    }
+    return *this;
+}
+
+
+Executor::~Executor() {}
+
+
 bool Executor::enter(std::ostream& out, std::istream& in) {
     out << "Available commands:\n"
         << "[1] List all products currently in warehouse\n"
@@ -44,6 +63,13 @@ bool Executor::enter(std::ostream& out, std::istream& in) {
 }
 
 
+void Executor::setToday(std::ostream &out, std::istream &in) {
+    Date date;
+    out << "Enter today's date:\n";
+    readDate(date, out, in);
+    warehouse.setToday(date);
+}
+
 void Executor::list(std::ostream& out) {
     out << warehouse;
 }
@@ -55,6 +81,7 @@ void Executor::addProduct(std::ostream& out, std::istream& in) {
     int num = -1;
 
     out << "Enter product name:\n";
+    in.ignore();
     getline(in, str);
     product.setName(str.c_str());
 
@@ -83,6 +110,7 @@ void Executor::addProduct(std::ostream& out, std::istream& in) {
     product.setStockedDate(date);
 
     out << "Enter a comment:\n";
+    in.ignore();
     getline(in, str);
     product.setComment(str.c_str());
 
@@ -100,6 +128,7 @@ void Executor::takeOutProduct(std::ostream& out, std::istream& in) {
     int quantity;
 
     out << "Enter the name of the product you want to take out:\n";
+    in.ignore();
     getline(in, str);
 
     out << "Enter the quantity you want to take out:\n";
@@ -129,21 +158,62 @@ void Executor::makeQuery(std::ostream& out, std::istream& in) {
 void Executor::cleanup(std::ostream& out, std::istream& in) {
     Date date;
     std::ofstream file;
+    std::string str;
 
     out << "Enter cleanup date:\n";
     readDate(date,out, in);
+     str = "cleanup-";
+     str += std::to_string(date.year);
+     str += "-";
+     str += std::to_string(date.month);
+     str += "-";
+     str += std::to_string(date.day);
+     str += ".txt";
 
-    file.open(); // TODO add date string as file name and write in it
+    file.open(str.c_str());
+    if (!file) {
+        out << "File could NOT be opened to save cleanup information!\n";
+        return;
+    }
+
+    warehouse.cleanup(file, date);
+    out << "Cleanup successful!\n";
 }
 
 
 void Executor::load(std::ostream& out, std::istream& in) {
-// TODO read filename and load from it
+    std::string str;
+    std::ifstream file;
+    out << "Enter name of the warehouse file:\n";
+    in.ignore();
+    std::getline(in, str);
+
+    file.open(str.c_str());
+    if (!file) {
+        out << "File could NOT be opened!\n";
+        return;
+    }
+
+    fileManager.readFile(file, warehouse);
+    out << "\nFile read successfully!\n";
 }
 
 
 void Executor::save(std::ostream& out, std::istream& in) {
-// TODO read filename and save in it
+    std::string str;
+    std::ofstream file;
+    out << "Enter name of the warehouse file:\n";
+    in.ignore();
+    std::getline(in, str);
+
+    file.open(str.c_str());
+    if (!file.good()) {
+        out << "File count NOT be opened!\n";
+        return;
+    }
+
+    fileManager.writeFile(file, warehouse);
+    out << "\nWarehouse saved successfully!\n";
 }
 
 void Executor::readDate(Date& date, std::ostream& out, std::istream& in) {
@@ -165,3 +235,4 @@ void Executor::readDate(Date& date, std::ostream& out, std::istream& in) {
         date = d;
     }
 }
+
