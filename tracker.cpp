@@ -13,6 +13,7 @@ Tracker::Tracker(Tracker const& other) : Container(0) {
 Tracker &Tracker::operator=(Tracker const& other) {
     if (this != &other) {
         delete[] removed;
+        capacity = other.capacity;
         removed = nullptr;
     }
     return *this;
@@ -38,7 +39,10 @@ void Tracker::addSlotRemoved() {
     DateIndexer* temp = new DateIndexer[capacity + 1];
 
     for (int i = 0; i < capacity; i++) {
-        temp[i] = removed[i];
+        temp[i].capacity = removed[i].capacity;
+        temp[i].productCount = removed[i].productCount;
+        temp[i].products = removed[i].products;
+        temp[i].date = removed[i].date;
     }
 
     delete[] removed;
@@ -56,6 +60,7 @@ void Tracker::addRemoved(Product *product, const Date &dateRemoved) {
         capacity++;
         return;
     }
+    removed[index].addProduct(product);
 }
 
 void Tracker::searchInInterval(Date const& from, Date const& to,

@@ -1,9 +1,13 @@
 #ifndef __WAREHOUSE
 #define __WAREHOUSE
 
+#include "tracker.hpp"
 #include "section.hpp"
 
 class Warehouse : public Container {
+    Tracker tracker;
+    Date today;
+
     Section* sections;
 
     void copySections(Section* others);
@@ -23,11 +27,14 @@ public:
 
     Section& operator[](int index);
 
+    void setToday(Date const& date);
+    Date* getToday();
     bool setSectionCapacity(int index, int sectionCapacity);
 
     Product* findEqual(char const* name, Date const& date);
     void findAllByName(const char* name, DynArray<Product*>& results) const;
-    void findAllByDate(Date const& date, DynArray<Product*>& results);
+    void findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const;
+    void findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product*> &results) const;
 
     bool addProduct(Product const& product, int sectionIndex, int shelfIndex, int index);
     Product* removeProduct(int sectionIndex, int shelfIndex, int index, int quantity);
@@ -38,6 +45,8 @@ public:
     void cleanup(std::ostream& file, Date const& date);
 
     friend std::ostream& operator<<(std::ostream& out, Warehouse const& w);
+
+    void makeQuery(std::ostream &out, const Date &from, const Date &to);
 };
 
 #endif

@@ -1,16 +1,19 @@
 #include "warehouse.hpp"
 
 Warehouse::Warehouse() : Container(0) {
+    today = Date();
     sections = nullptr;
 }
 
 
 Warehouse::Warehouse(int capacity) : Container(capacity) {
+    today = Date();
     sections = new Section[capacity];
 }
 
 
 Warehouse::Warehouse(Warehouse const& other) : Container(other.capacity) {
+    today = other.today;
     sections = new Section[other.capacity];
     copySections(other.sections);
 }
@@ -19,6 +22,7 @@ Warehouse::Warehouse(Warehouse const& other) : Container(other.capacity) {
 Warehouse& Warehouse::operator=(Warehouse const& other) {
     if (this != &other) {
         delete[] sections;
+        today = other.today;
         capacity = other.capacity;
         sections = new Section[capacity];
         copySections(other.sections);
@@ -49,6 +53,10 @@ void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) c
 
 
 int Warehouse::sortAndCount(DynArray<Product*> products) const {
+    if (products.size() == 0) {
+        return 0;
+    }
+
     int quantitySum = 0;
     for (int i = 0; i < products.size() - 1; i++) {
         int minIndex = i;
@@ -83,6 +91,15 @@ Section& Warehouse::operator[](int index) {
 }
 
 
+void Warehouse::setToday(const Date &date) {
+    today = date;
+}
+
+
+Date* Warehouse::getToday() {
+    return &today;
+}
+
 bool Warehouse::setSectionCapacity(int index, int sectionCapacity) {
     if (index < 0 || index > capacity - 1) { return false; }
     sections[index] = Section(sectionCapacity);
@@ -106,9 +123,16 @@ void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) con
 }
 
 
-void Warehouse::findAllByDate(Date const& date, DynArray<Product*>& results) {
+void Warehouse::findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
-        sections[i].findAllByDate(date, results);
+        sections[i].findAllExpiredByDate(date, results);
+    }
+}
+
+
+void Warehouse::findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product*> &results) const {
+    for (int i = 0; i < capacity; i++) {
+        sections[i].findAllStockedBetweenDates(from, to, results);
     }
 }
 
@@ -155,11 +179,11 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
         int currentQuantity = products[i]->getQuantity();
 
         if (wanted >= currentQuantity) {
-            removeProduct(p.section, p.shelf, p.index, -1);
+            tracker.addRemoved(removeProduct(p.section, p.shelf, p.index, -1), today);
             wanted -= currentQuantity;
         }
         else {
-            removeProduct(p.section, p.shelf, p.index, wanted);
+            tracker.addRemoved(removeProduct(p.section, p.shelf, p.index, wanted), today);
             wanted = 0;
         }
     }
@@ -230,8 +254,13 @@ bool Warehouse::restock(Product const& product) {
 
 void Warehouse::cleanup(std::ostream& file, Date const& date) {
     DynArray<Product*> products(10);
-    findAllByDate(date, products);
+    findAllExpiredByDate(date, products);
     printProducts(file, products);
+
+    for (int i = 0; i < products.size(); i++) {
+        Placement place = products[i]->getPlacement();
+        tracker.addRemoved(removeProduct(place.section, place.shelf, place.index, -1), date);
+    }
 }
 
 
@@ -266,4 +295,19 @@ std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
     }
 
     return out;
+}
+
+
+void Warehouse::makeQuery(std::ostream& out, Date const& from, Date const& to) {
+    DynArray<Product *> stocked(5);
+    DynArray<Product *> removed(5);
+    tracker.searchInInterval(from, to , stocked, removed);
+    findAllExpiredByDate(to, removed);
+    findAllStockedBetweenDates(from, to, stocked);
+
+    out << "STOCKED BETWEEN " << from << " AND " << to << "\n";
+    printProducts(out, stocked);
+
+    out << "\nREMOVED BETWEEN " << from << " AND " << to << "\n";
+    printProducts(out, removed);
 }

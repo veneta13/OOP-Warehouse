@@ -761,7 +761,6 @@ TEST_CASE("Tracker tests")
         DynArray<Product*> stocked(2), cleanedUp(2);
 
         Product* p1 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate1, dummyPlacement1);
-        Product* p2 = new Product(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
 
         Tracker t1;
         t1.addRemoved(p1, dummyDate1);
@@ -886,7 +885,7 @@ TEST_CASE("Shelf tests")
         REQUIRE(result.size() == 2);
     }
 
-    SECTION("Find all by date")
+    SECTION("Find all by expiration date")
     {
         Shelf s1(10);
         Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
@@ -894,15 +893,35 @@ TEST_CASE("Shelf tests")
         DynArray<Product*> result(5);
 
         REQUIRE(result.size() == 0);
-        s1.findAllByDate(dummyDate1, result);
+        s1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 0);
 
         REQUIRE(s1.addProduct(p1, 1, true));
-        s1.findAllByDate(dummyDate1, result);
+        s1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 1);
 
         REQUIRE(s1.addProduct(p2, 2, true));
-        s1.findAllByDate(dummyDate1, result);
+        s1.findAllExpiredByDate(dummyDate1, result);
+        REQUIRE(result.size() == 2);
+    }
+
+    SECTION("Find all by stocked date")
+    {
+        Shelf s1(10);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement2);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 1, dummyDate2, dummyDate3, dummyPlacement2);
+        DynArray<Product*> result(5);
+
+        REQUIRE(result.size() == 0);
+        s1.findAllStockedBetweenDates(dummyDate1, dummyDate3, result);
+        REQUIRE(result.size() == 0);
+
+        REQUIRE(s1.addProduct(p1, 1, true));
+        s1.findAllExpiredByDate(dummyDate1, result);
+        REQUIRE(result.size() == 1);
+
+        REQUIRE(s1.addProduct(p2, 2, true));
+        s1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 2);
     }
 
@@ -1114,7 +1133,7 @@ TEST_CASE("Section tests")
         REQUIRE(result.size() == 4);
     }
 
-    SECTION("Find all by date")
+    SECTION("Find all by expired date")
     {
         DynArray<Product*> result(5);
         Section c1(2);
@@ -1130,13 +1149,38 @@ TEST_CASE("Section tests")
         REQUIRE(c1[0].addProduct(p1).index == 0);
         REQUIRE(c1[1].addProduct(p2).index == 0);
 
-        c1.findAllByDate(dummyDate1, result);
+        c1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 2);
 
         REQUIRE(c1[1].addProduct(p3).index == 1);
 
-        c1.findAllByDate(dummyDate2, result);
+        c1.findAllExpiredByDate(dummyDate2, result);
         REQUIRE(result.size() == 4);
+    }
+
+    SECTION("Find all by stocked date")
+    {
+        DynArray<Product*> result(5);
+        Section c1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate1, dummyPlacement1);
+        Product p2(dummyName1, dummyManufacturer2, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p3(dummyName2, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate3, dummyPlacement1);
+
+        REQUIRE(c1.setShelfCapacity(0, 2));
+        REQUIRE(c1.setShelfCapacity(1, 3));
+
+        REQUIRE(result.size() == 0);
+
+        REQUIRE(c1[0].addProduct(p1).index == 0);
+        REQUIRE(c1[1].addProduct(p2).index == 0);
+
+        c1.findAllStockedBetweenDates(dummyDate1, dummyDate3, result);
+        REQUIRE(result.size() == 1);
+
+        REQUIRE(c1[1].addProduct(p3).index == 1);
+
+        c1.findAllStockedBetweenDates(dummyDate3, dummyDate2, result);
+        REQUIRE(result.size() == 3);
     }
 
     SECTION("Remove product")
@@ -1197,12 +1241,14 @@ TEST_CASE("Warehouse tests")
     {
         Warehouse w1;
         REQUIRE(w1.getCapacity() == 0);
+        REQUIRE(*w1.getToday() == Date());
     }
 
     SECTION("Constructor with parameters")
     {
         Warehouse w1(2);
         REQUIRE(w1.getCapacity() == 2);
+        REQUIRE(*w1.getToday() == Date());
     }
 
     SECTION("Copy constructor")
@@ -1308,6 +1354,15 @@ TEST_CASE("Warehouse tests")
         REQUIRE(w1[2].getCapacity() == 4);
     }
 
+    SECTION("Setter and getter today")
+    {
+        Warehouse w1;
+        REQUIRE(*w1.getToday() == Date());
+
+        w1.setToday(dummyDate1);
+        REQUIRE(*w1.getToday() == dummyDate1);
+    }
+
     SECTION("Operator <<")
     {
         Warehouse w1(2);
@@ -1411,7 +1466,7 @@ TEST_CASE("Warehouse tests")
         REQUIRE(result.size() == 4);
     }
 
-    SECTION("Find all by date")
+    SECTION("Find all by expired date")
     {
         DynArray<Product *> result(5);
         Warehouse w1(2);
@@ -1427,24 +1482,61 @@ TEST_CASE("Warehouse tests")
         REQUIRE(w1[1].setShelfCapacity(0, 4));
         REQUIRE(w1[1].setShelfCapacity(1, 5));
 
-        w1.findAllByDate(dummyDate1, result);
+        w1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 0);
 
-        w1.findAllByDate(dummyDate2, result);
+        w1.findAllExpiredByDate(dummyDate2, result);
         REQUIRE(result.size() == 0);
 
         REQUIRE(w1[0].addProduct(p1).index == 0);
         REQUIRE(w1[1].addProduct(p2).index == 0);
 
-        w1.findAllByDate(dummyDate1, result);
+        w1.findAllExpiredByDate(dummyDate1, result);
         REQUIRE(result.size() == 1);
 
-        w1.findAllByDate(dummyDate2, result);
+        w1.findAllExpiredByDate(dummyDate2, result);
         REQUIRE(result.size() == 3);
 
         REQUIRE(w1[0].addProduct(p3).index == 1);
 
-        w1.findAllByDate(dummyDate2, result);
+        w1.findAllExpiredByDate(dummyDate2, result);
+        REQUIRE(result.size() == 6);
+    }
+
+    SECTION("Find all by stocked date")
+    {
+        DynArray<Product *> result(5);
+        Warehouse w1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate1, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment1, 2, dummyDate2, dummyDate3, dummyPlacement1);
+        Product p3(dummyName2, dummyManufacturer2, dummyComment1, 2, dummyDate2, dummyDate2, dummyPlacement1);
+
+        REQUIRE(w1.setSectionCapacity(0, 2));
+        REQUIRE(w1.setSectionCapacity(1, 2));
+
+        REQUIRE(w1[0].setShelfCapacity(0, 2));
+        REQUIRE(w1[0].setShelfCapacity(1, 3));
+        REQUIRE(w1[1].setShelfCapacity(0, 4));
+        REQUIRE(w1[1].setShelfCapacity(1, 5));
+
+        w1.findAllStockedBetweenDates(dummyDate1, dummyDate3, result);
+        REQUIRE(result.size() == 0);
+
+        w1.findAllStockedBetweenDates(dummyDate2, dummyDate3, result);
+        REQUIRE(result.size() == 0);
+
+        REQUIRE(w1[0].addProduct(p1).index == 0);
+        REQUIRE(w1[1].addProduct(p3).index == 0);
+
+        w1.findAllStockedBetweenDates(dummyDate1, dummyDate3, result);
+        REQUIRE(result.size() == 1);
+
+        w1.findAllStockedBetweenDates(dummyDate1, dummyDate2, result);
+        REQUIRE(result.size() == 3);
+
+        REQUIRE(w1[0].addProduct(p3).index == 1);
+
+        w1.findAllStockedBetweenDates(dummyDate1, dummyDate2, result);
         REQUIRE(result.size() == 6);
     }
 
@@ -1562,38 +1654,100 @@ TEST_CASE("Warehouse tests")
 
     SECTION("Take out product")
     {
-//        Warehouse w1(2);
-//        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
-//        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 2, dummyDate2, dummyDate2, dummyPlacement1);
-//        Product p3(dummyName3, dummyManufacturer3, dummyComment3, 6, dummyDate3, dummyDate2, dummyPlacement1);
-//
-//        REQUIRE(w1.setSectionCapacity(0, 2));
-//        REQUIRE(w1.setSectionCapacity(1, 2));
-//
-//        REQUIRE(w1[0].setShelfCapacity(0, 1));
-//        REQUIRE(w1[0].setShelfCapacity(1, 1));
-//        REQUIRE(w1[1].setShelfCapacity(0, 2));
-//
-//        REQUIRE(w1.restock(p1));
-//        REQUIRE(w1.restock(p2));
-//        REQUIRE(w1.restock(p3));
-//
-//        std::stringstream inY("y");
-//        std::stringstream inN("n");
-//        std::stringstream out;
-//
-//        REQUIRE(w1.findEqual(dummyName1, dummyDate1));
-//        REQUIRE(w1.takeOutProduct(out, inY, dummyName1, 2));
-//        REQUIRE(!w1.findEqual(dummyName1, dummyDate1));
-//
-//        REQUIRE(w1.findEqual(dummyName2, dummyDate2));
-//        REQUIRE(!w1.takeOutProduct(out, inN, dummyName2, 4));
-//        REQUIRE(w1.findEqual(dummyName2, dummyDate2));
-//
-//        REQUIRE(w1.findEqual(dummyName3, dummyDate3));
-//        REQUIRE(w1.takeOutProduct(out, inY, dummyName3, 2));
-//        REQUIRE(w1.findEqual(dummyName3, dummyDate3));
-//        REQUIRE(w1.takeOutProduct(out, inY, dummyName3, 4));
-//        REQUIRE(!w1.findEqual(dummyName3, dummyDate3));
+        Warehouse w1(2);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate1, dummyDate2, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 2, dummyDate2, dummyDate2, dummyPlacement1);
+        Product p3(dummyName3, dummyManufacturer3, dummyComment3, 6, dummyDate3, dummyDate2, dummyPlacement1);
+
+        REQUIRE(w1.setSectionCapacity(0, 2));
+        REQUIRE(w1.setSectionCapacity(1, 2));
+
+        REQUIRE(w1[0].setShelfCapacity(0, 1));
+        REQUIRE(w1[0].setShelfCapacity(1, 1));
+        REQUIRE(w1[1].setShelfCapacity(0, 2));
+
+        REQUIRE(w1.restock(p1));
+        REQUIRE(w1.restock(p2));
+        REQUIRE(w1.restock(p3));
+
+        std::stringstream inY("y");
+        std::stringstream inN("n");
+        std::stringstream out;
+
+        REQUIRE(w1.findEqual(dummyName1, dummyDate1));
+        REQUIRE(w1.takeOutProduct(out, inY, dummyName1, 2));
+        REQUIRE(!w1.findEqual(dummyName1, dummyDate1));
+
+        REQUIRE(w1.findEqual(dummyName2, dummyDate2));
+        REQUIRE(!w1.takeOutProduct(out, inN, dummyName2, 4));
+        REQUIRE(w1.findEqual(dummyName2, dummyDate2));
+
+        REQUIRE(w1.findEqual(dummyName3, dummyDate3));
+        REQUIRE(w1.takeOutProduct(out, inY, dummyName3, 2));
+        REQUIRE(w1.findEqual(dummyName3, dummyDate3));
+        REQUIRE(w1.takeOutProduct(out, inY, dummyName3, 4));
+        REQUIRE(!w1.findEqual(dummyName3, dummyDate3));
+    }
+
+    SECTION("Make query")
+    {
+        Warehouse w1(2);
+
+        w1.setToday(dummyDate3);
+
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 1, dummyDate3, dummyDate1, dummyPlacement1);
+        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 2, dummyDate2, dummyDate3, dummyPlacement1);
+        Product p3(dummyName3, dummyManufacturer3, dummyComment3, 6, dummyDate3, dummyDate2, dummyPlacement1);
+
+        REQUIRE(w1.setSectionCapacity(0, 2));
+        REQUIRE(w1.setSectionCapacity(1, 2));
+
+        REQUIRE(w1[0].setShelfCapacity(0, 2));
+        REQUIRE(w1[0].setShelfCapacity(1, 2));
+        REQUIRE(w1[1].setShelfCapacity(0, 2));
+        REQUIRE(w1[1].setShelfCapacity(1, 2));
+
+        REQUIRE(w1.restock(p1));
+        REQUIRE(w1.restock(p2));
+        REQUIRE(w1.restock(p3));
+
+        const char* answer = "STOCKED BETWEEN 12/3/2004 AND 26/4/2020\n"
+        "NAME: dummy Name1\n"
+        "DETAILS:\n"
+        "COUNT: 1\n"
+        "MANUFACTURER: dummy Manufacturer1\n"
+        "INDEX: 0 SHELF: 0 SECTION: 0\n"
+        "EXP: 26/4/2020 STOCK: 12/3/2004\n"
+        "NOTES: This is a dummy comment\n"
+        "NAME: dummy Name2\n"
+        "DETAILS:\n"
+        "COUNT: 2\n"
+        "MANUFACTURER: dummy Manufacturer2\n"
+        "INDEX: 1 SHELF: 0 SECTION: 0\n"
+        "EXP: 1/2/2021 STOCK: 26/4/2020\n"
+        "NOTES: This is another dummy comment\n"
+        "\n"
+        "REMOVED BETWEEN 12/3/2004 AND 26/4/2020\n"
+        "NAME: dummy Name1\n"
+        "DETAILS:\n"
+        "COUNT: 1\n"
+        "MANUFACTURER: dummy Manufacturer1\n"
+        "INDEX: 0 SHELF: 0 SECTION: 0\n"
+        "EXP: 26/4/2020 STOCK: 12/3/2004\n"
+        "NOTES: This is a dummy comment\n"
+        "NAME: dummy Name3\n"
+        "DETAILS:\n"
+        "COUNT: 6\n"
+        "MANUFACTURER: dummy Manufacturer3\n"
+        "INDEX: 0 SHELF: 1 SECTION: 0\n"
+        "EXP: 26/4/2020 STOCK: 1/2/2021\n"
+        "NOTES: This is dummy comment 3\n";
+
+        std::stringstream out1, out2;
+        w1.cleanup(out1, dummyDate3);
+        w1.takeOutProduct(out1, out1, dummyName1, 1);
+
+        w1.makeQuery(out2, dummyDate1, dummyDate3);
+        REQUIRE(out2.str() == answer);
     }
 }

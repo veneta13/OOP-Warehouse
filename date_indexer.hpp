@@ -25,6 +25,8 @@ public:
 
     void setDate(Date const& _date);
     void addProduct(Product* product);
+
+    friend class Tracker;
 };
 
 #endif
