@@ -3,9 +3,15 @@
 
 #include <iostream>
 
+///\brief Represents a specific time by day, month and year
 struct Date {
+    /// The day of the month
     int day;
+
+    /// The month
     int month;
+
+    /// The year
     int year;
 
     Date();

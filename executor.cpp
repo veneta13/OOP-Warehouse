@@ -1,13 +1,19 @@
 #include "executor.hpp"
 
+/// Default constructor
 Executor::Executor() {}
 
 
+/// Copy constructor
+/// \param other executor to copy
 Executor::Executor(Executor const& other) {
     warehouse = other.warehouse;
 }
 
 
+/// Copy assignment operator
+/// \param other executor to copy
+/// \return the updated executor
 Executor& Executor::operator=(Executor const& other) {
     if (this != &other) {
         warehouse = other.warehouse;
@@ -16,9 +22,14 @@ Executor& Executor::operator=(Executor const& other) {
 }
 
 
+/// Destructor
 Executor::~Executor() {}
 
 
+/// User interface menu
+/// \param out output stream to write the menu in
+/// \param in input stream to read user input from
+/// \return if the program should exit
 bool Executor::enter(std::ostream& out, std::istream& in) {
     out << "Available commands:\n"
         << "[1] List all products currently in warehouse\n"
@@ -63,6 +74,9 @@ bool Executor::enter(std::ostream& out, std::istream& in) {
 }
 
 
+/// Today date setter
+/// \param out output stream to write the prompt in
+/// \param in input stream to read date from
 void Executor::setToday(std::ostream &out, std::istream &in) {
     Date date;
     out << "Enter today's date:\n";
@@ -70,11 +84,17 @@ void Executor::setToday(std::ostream &out, std::istream &in) {
     warehouse.setToday(date);
 }
 
+
+/// List all items currently in the warehouse
+/// \param out output stream to write items in
 void Executor::list(std::ostream& out) {
     out << warehouse;
 }
 
 
+/// Create and add product in the warehouse
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::addProduct(std::ostream& out, std::istream& in) {
     Product product;
     std::string str;
@@ -123,6 +143,9 @@ void Executor::addProduct(std::ostream& out, std::istream& in) {
 }
 
 
+/// Take out product from the warehouse
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::takeOutProduct(std::ostream& out, std::istream& in) {
     std::string str;
     int quantity;
@@ -143,6 +166,9 @@ void Executor::takeOutProduct(std::ostream& out, std::istream& in) {
 }
 
 
+/// Make expired and stocked query
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::makeQuery(std::ostream& out, std::istream& in) {
     Date from, to;
 
@@ -155,6 +181,9 @@ void Executor::makeQuery(std::ostream& out, std::istream& in) {
 }
 
 
+/// Cleanup expired and expiring products from warehouse and save information in file
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::cleanup(std::ostream& out, std::istream& in) {
     Date date;
     std::ofstream file;
@@ -181,6 +210,9 @@ void Executor::cleanup(std::ostream& out, std::istream& in) {
 }
 
 
+/// Load warehouse information from file
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::load(std::ostream& out, std::istream& in) {
     std::string str;
     std::ifstream file;
@@ -199,6 +231,9 @@ void Executor::load(std::ostream& out, std::istream& in) {
 }
 
 
+/// Save warehouse information in file
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::save(std::ostream& out, std::istream& in) {
     std::string str;
     std::ofstream file;
@@ -216,6 +251,11 @@ void Executor::save(std::ostream& out, std::istream& in) {
     out << "\nWarehouse saved successfully!\n";
 }
 
+
+/// Update date via user input
+/// \param date the date object to update
+/// \param out output stream to write prompts in
+/// \param in input stream to read user input from
 void Executor::readDate(Date& date, std::ostream& out, std::istream& in) {
     while (!date.isValid()) {
         Date d;

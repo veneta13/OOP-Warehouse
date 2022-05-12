@@ -1,5 +1,6 @@
 #include "date.hpp"
 
+/// Default constructor
 Date::Date() {
     day = 0;
     month = 0;
@@ -8,11 +9,17 @@ Date::Date() {
 }
 
 
+/// Constructor with parameters
+/// \param day the day
+/// \param month the month
+/// \param year the year
 Date::Date(int day, int month, int year) : day(day), month(month), year(year) {
     valid = validate();
 }
 
 
+/// Copy constructor
+/// \param other date to copy
 Date::Date(Date const& other) {
     this->day = other.day;
     this->month = other.month;
@@ -21,6 +28,9 @@ Date::Date(Date const& other) {
 }
 
 
+/// Copy assignment operator
+/// \param other date to copy
+/// \return the updated date
 Date& Date::operator=(Date const& other) {
     if (this != &other) {
         this->day = other.day;
@@ -32,6 +42,7 @@ Date& Date::operator=(Date const& other) {
 }
 
 
+/// Destructor
 Date::~Date() {
     day = 0;
     month = 0;
@@ -40,6 +51,8 @@ Date::~Date() {
 }
 
 
+/// Validate the date
+/// \return if the date is valid
 bool Date::validate() const {
     if (day < 1 || month < 1 || day > 31 || month > 12 || year < 0) {
         return false;
@@ -72,6 +85,9 @@ bool Date::validate() const {
 }
 
 
+/// Compare dates with greater than operator
+/// \param other date to compare the current date to
+/// \return if the current date is after the other
 bool Date::operator>(Date const& other) const {
     if (this->year > other.year) {
         return true;
@@ -95,6 +111,9 @@ bool Date::operator>(Date const& other) const {
 }
 
 
+/// Compare dates with equality operator
+/// \param other date to compare the current date to
+/// \return if the current date is the same as the other
 bool Date::operator==(Date const& other) const {
     if (this->year == other.year && this->month == other.month && this->day == other.day) {
         return true;
@@ -103,11 +122,17 @@ bool Date::operator==(Date const& other) const {
 }
 
 
+/// Compare dates with inequality operator
+/// \param other date to compare the current date to
+/// \return if the current date is not the same as the other
 bool Date::operator!=(Date const& other) const {
     return !operator==(other);
 }
 
 
+/// Compare dates with less than operator
+/// \param other date to compare the current date to
+/// \return if the current date is before the other
 bool Date::operator<(Date const& other) const {
     if (*this == other || *this > other) {
         return false;
@@ -116,6 +141,9 @@ bool Date::operator<(Date const& other) const {
 }
 
 
+/// Compare dates with greater than or equal operator
+/// \param other date to compare the current date to
+/// \return if the current date is after or the same as the other
 bool Date::operator>=(Date const& other) const {
     if (*this == other || *this > other) {
         return true;
@@ -124,6 +152,9 @@ bool Date::operator>=(Date const& other) const {
 }
 
 
+/// Compare dates with less than or equal operator
+/// \param other date to compare the current date to
+/// \return if the current date is before or the same as the other
 bool Date::operator<=(Date const& other) const {
     if (*this == other || *this < other) {
         return true;
@@ -132,10 +163,17 @@ bool Date::operator<=(Date const& other) const {
 }
 
 
+/// Getter for valid
+/// \return the value of valid
 bool Date::isValid() const {
     return valid;
 }
 
+
+/// Stream insertion operator
+/// \param out output stream
+/// \param d date
+/// \return the stream with date put in
 std::ostream& operator<<(std::ostream& out, Date const& d) {
     out << d.day << "/" << d.month << "/" << d.year;
     return out;

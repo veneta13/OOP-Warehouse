@@ -6,8 +6,10 @@
 
 #include <iostream>
 
+///\brief Base container
 class Container {
 protected:
+    /// The quantity the container can hold
     int capacity;
 
 public:

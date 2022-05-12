@@ -5,8 +5,12 @@
 
 #include <fstream>
 
+///\brief User interface provider
 class Executor {
+    /// The warehouse
     Warehouse warehouse;
+
+    /// File reader/writer
     FileManager fileManager;
 
     void list(std::ostream& out);
