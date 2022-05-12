@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "warehouse.hpp"
+#include "file_manager.hpp"
 
 #include<sstream>
 
@@ -1749,5 +1749,132 @@ TEST_CASE("Warehouse tests")
 
         w1.makeQuery(out2, dummyDate1, dummyDate3);
         REQUIRE(out2.str() == answer);
+    }
+}
+
+TEST_CASE("File manager tests")
+{
+    SECTION("Default constructor")
+    {
+        FileManager fm1;
+    }
+
+    SECTION("Copy constructor")
+    {
+        FileManager fm1;
+        FileManager fm2(fm1);
+    }
+
+    SECTION("Operator =")
+    {
+        FileManager fm1;
+        FileManager fm2 = fm1;
+    }
+
+
+    SECTION("Read unsucessful")
+    {
+        FileManager fm1;
+        Warehouse w1;
+        const char* params1 = "-3\n"
+        "1 3 2\n"
+        "3 4 5 6 2 1";
+
+        const char* params2 = "3\n"
+        "1 3 -2\n"
+        "3 4 5 6 2 1";
+
+        const char* params3 = "3\n"
+        "1 3 2\n"
+        "3 4 -5 6 2 1";
+
+        std::stringstream ss1(params1), ss2(params2), ss3(params3);
+
+        REQUIRE(!fm1.readFile(ss1, w1));
+        REQUIRE(!fm1.readFile(ss2, w1));
+        REQUIRE(!fm1.readFile(ss3, w1));
+    }
+
+    SECTION("Read warehouse")
+    {
+        FileManager fm1;
+        Warehouse w1;
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 5, dummyDate1, dummyDate2, Placement({0, 0, 0}));
+        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 1, dummyDate3, dummyDate1, Placement({2, 1, 0}));
+
+        const char* params1 = "3\n"
+        "1 2 2\n"
+        "3 1 2 2 1\n"
+        "dummy Name1\n"
+        "dummy Manufacturer1\n"
+        "5\n"
+        "0 0 0\n"
+        "12 3 2004\n"
+        "1 2 2020\n"
+        "This is a dummy comment\n"
+        "dummy Name2\n"
+        "dummy Manufacturer2\n"
+        "1\n"
+        "0 1 2\n"
+        "26 4 2020\n"
+        "12 3 2004\n"
+        "This is another dummy comment\n";
+
+        std::stringstream ss1(params1);
+        REQUIRE(fm1.readFile(ss1, w1));
+        REQUIRE(w1.getCapacity() == 3);
+        REQUIRE(w1[0].getCapacity() == 1);
+        REQUIRE(w1[1].getCapacity() == 2);
+        REQUIRE(w1[2].getCapacity() == 2);
+        REQUIRE(w1[0][0].getCapacity() == 3);
+        REQUIRE(w1[1][0].getCapacity() == 1);
+        REQUIRE(w1[1][1].getCapacity() == 2);
+        REQUIRE(w1[2][0].getCapacity() == 2);
+        REQUIRE(w1[2][1].getCapacity() == 1);
+
+        REQUIRE(w1[0][0][0] == p1);
+        REQUIRE(w1[2][1][0] == p2);
+    }
+
+    SECTION("Write warehouse")
+    {
+        FileManager fm1;
+        Warehouse w1(3);
+        Product p1(dummyName1, dummyManufacturer1, dummyComment1, 5, dummyDate1, dummyDate2, Placement({0, 0, 0}));
+        Product p2(dummyName2, dummyManufacturer2, dummyComment2, 1, dummyDate3, dummyDate1, Placement({2, 1, 0}));
+
+        REQUIRE(w1.setSectionCapacity(0, 1));
+        REQUIRE(w1.setSectionCapacity(1, 2));
+        REQUIRE(w1.setSectionCapacity(2, 2));
+        REQUIRE(w1[0].setShelfCapacity(0, 3));
+        REQUIRE(w1[1].setShelfCapacity(0, 1));
+        REQUIRE(w1[1].setShelfCapacity(1, 2));
+        REQUIRE(w1[2].setShelfCapacity(0, 2));
+        REQUIRE(w1[2].setShelfCapacity(1, 1));
+
+        REQUIRE(w1.addProduct(p1, 0, 0, 0));
+        REQUIRE(w1.addProduct(p2, 2, 1, 0));
+
+        const char* answer = "3\n"
+        "1 2 2 \n"
+        "3 1 2 2 1 \n"
+        "dummy Name1\n"
+        "dummy Manufacturer1\n"
+        "5\n"
+        "0 0 0\n"
+        "12 3 2004\n"
+        "1 2 2021\n"
+        "This is a dummy comment\n"
+        "dummy Name2\n"
+        "dummy Manufacturer2\n"
+        "1\n"
+        "0 1 2\n"
+        "26 4 2020\n"
+        "12 3 2004\n"
+        "This is another dummy comment\n";
+
+        std::stringstream ss1;
+        fm1.writeFile(ss1, w1);
+        REQUIRE(strcmp(ss1.str().c_str(), answer) == 0);
     }
 }
