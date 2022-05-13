@@ -129,7 +129,7 @@ void Section::findAllStockedBetweenDates(Date const& from, Date const& to, DynAr
 
 /// Add product at a set position
 /// \param product product to add
-/// \param shelfIndex shelf to add in
+/// \param shelfIndex shelf to add on
 /// \param index index to add at
 /// \return if the product was added successfully
 bool Section::addProduct(Product const& product, int shelfIndex, int index) {
