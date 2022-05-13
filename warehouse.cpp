@@ -2,28 +2,34 @@
 
 Warehouse::Warehouse() : Container(0) {
     today = Date();
+    tracker = new Tracker;
     sections = nullptr;
 }
 
 
 Warehouse::Warehouse(int capacity) : Container(capacity) {
     today = Date();
+    tracker = new Tracker;
     sections = new Section[capacity];
 }
 
 
 Warehouse::Warehouse(Warehouse const& other) : Container(other.capacity) {
+    tracker = nullptr;
     today = other.today;
     sections = new Section[other.capacity];
+    tracker = new Tracker;
     copySections(other.sections);
 }
 
 
 Warehouse& Warehouse::operator=(Warehouse const& other) {
     if (this != &other) {
+        delete tracker;
         delete[] sections;
         today = other.today;
         capacity = other.capacity;
+        tracker = new Tracker;
         sections = new Section[capacity];
         copySections(other.sections);
     }
@@ -33,6 +39,7 @@ Warehouse& Warehouse::operator=(Warehouse const& other) {
 
 Warehouse::~Warehouse() {
     capacity = 0;
+    delete tracker;
     delete[] sections;
     sections = nullptr;
 }
@@ -179,11 +186,11 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
         int currentQuantity = products[i]->getQuantity();
 
         if (wanted >= currentQuantity) {
-            tracker.addRemoved(removeProduct(p.section, p.shelf, p.index, -1), today);
+            tracker->addRemoved(removeProduct(p.section, p.shelf, p.index, -1), today);
             wanted -= currentQuantity;
         }
         else {
-            tracker.addRemoved(removeProduct(p.section, p.shelf, p.index, wanted), today);
+            tracker->addRemoved(removeProduct(p.section, p.shelf, p.index, wanted), today);
             wanted = 0;
         }
     }
@@ -259,7 +266,7 @@ void Warehouse::cleanup(std::ostream& file, Date const& date) {
 
     for (int i = 0; i < products.size(); i++) {
         Placement place = products[i]->getPlacement();
-        tracker.addRemoved(removeProduct(place.section, place.shelf, place.index, -1), date);
+        tracker->addRemoved(removeProduct(place.section, place.shelf, place.index, -1), date);
     }
 }
 
@@ -301,7 +308,7 @@ std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
 void Warehouse::makeQuery(std::ostream& out, Date const& from, Date const& to) {
     DynArray<Product *> stocked(5);
     DynArray<Product *> removed(5);
-    tracker.searchInInterval(from, to , stocked, removed);
+    tracker->searchInInterval(from, to , stocked, removed);
     findAllExpiredByDate(to, removed);
     findAllStockedBetweenDates(from, to, stocked);
 

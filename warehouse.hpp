@@ -5,7 +5,7 @@
 #include "section.hpp"
 
 class Warehouse : public Container {
-    Tracker tracker;
+    Tracker* tracker;
     Date today;
 
     Section* sections;
