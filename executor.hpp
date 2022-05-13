@@ -8,7 +8,7 @@
 ///\brief User interface provider
 class Executor {
     /// The warehouse
-    Warehouse warehouse;
+    Warehouse* warehouse;
 
     /// File reader/writer
     FileManager fileManager;

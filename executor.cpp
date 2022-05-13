@@ -1,13 +1,15 @@
 #include "executor.hpp"
 
 /// Default constructor
-Executor::Executor() {}
+Executor::Executor() {
+    warehouse = new Warehouse;
+}
 
 
 /// Copy constructor
 /// \param other executor to copy
 Executor::Executor(Executor const& other) {
-    warehouse = other.warehouse;
+    warehouse = new Warehouse(*other.warehouse);
 }
 
 
@@ -16,14 +18,18 @@ Executor::Executor(Executor const& other) {
 /// \return the updated executor
 Executor& Executor::operator=(Executor const& other) {
     if (this != &other) {
-        warehouse = other.warehouse;
+        delete warehouse;
+        warehouse = new Warehouse(*other.warehouse);
     }
     return *this;
 }
 
 
 /// Destructor
-Executor::~Executor() {}
+Executor::~Executor() {
+    delete warehouse;
+    warehouse = nullptr;
+}
 
 
 /// User interface menu
@@ -81,14 +87,14 @@ void Executor::setToday(std::ostream &out, std::istream &in) {
     Date date;
     out << "Enter today's date:\n";
     readDate(date, out, in);
-    warehouse.setToday(date);
+    warehouse->setToday(date);
 }
 
 
 /// List all items currently in the warehouse
 /// \param out output stream to write items in
 void Executor::list(std::ostream& out) {
-    out << warehouse;
+    out << (*warehouse);
 }
 
 
@@ -134,7 +140,7 @@ void Executor::addProduct(std::ostream& out, std::istream& in) {
     getline(in, str);
     product.setComment(str.c_str());
 
-    if (warehouse.restock(product)) {
+    if (warehouse->restock(product)) {
         out << "Product successfully added!\n";
     }
     else {
@@ -157,7 +163,7 @@ void Executor::takeOutProduct(std::ostream& out, std::istream& in) {
     out << "Enter the quantity you want to take out:\n";
     in >> quantity;
 
-    if (warehouse.takeOutProduct(out, in, str.c_str(), quantity)) {
+    if (warehouse->takeOutProduct(out, in, str.c_str(), quantity)) {
         out << "Product successfully taken out!\n";
     }
     else {
@@ -177,7 +183,7 @@ void Executor::makeQuery(std::ostream& out, std::istream& in) {
     out << "Enter end date:\n";
     readDate(to, out, in);
 
-    warehouse.makeQuery(out, from, to);
+    warehouse->makeQuery(out, from, to);
 }
 
 
@@ -205,7 +211,7 @@ void Executor::cleanup(std::ostream& out, std::istream& in) {
         return;
     }
 
-    warehouse.cleanup(file, date);
+    warehouse->cleanup(file, date);
     out << "Cleanup successful!\n";
 }
 
@@ -226,7 +232,7 @@ void Executor::load(std::ostream& out, std::istream& in) {
         return;
     }
 
-    fileManager.readFile(file, warehouse);
+    fileManager.readFile(file, *warehouse);
     out << "\nFile read successfully!\n";
 }
 
@@ -247,7 +253,7 @@ void Executor::save(std::ostream& out, std::istream& in) {
         return;
     }
 
-    fileManager.writeFile(file, warehouse);
+    fileManager.writeFile(file, *warehouse);
     out << "\nWarehouse saved successfully!\n";
 }
 
