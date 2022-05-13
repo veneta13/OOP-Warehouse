@@ -3,7 +3,9 @@
 
 #include "date_indexer.hpp"
 
+///\brief Tracks products removed from warehouse
 class Tracker : public Container {
+    /// The removed products indexed by date of remooval
     DateIndexer* removed;
 
     int getRemovedIndex(Date const& date);

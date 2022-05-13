@@ -1,15 +1,21 @@
 #include "tracker.hpp"
 
+/// Default constructor
 Tracker::Tracker() : Container(0){
     removed = nullptr;
 }
 
 
+/// Copy constructor
+/// \param other tracker to copy
 Tracker::Tracker(Tracker const& other) : Container(0) {
     removed = nullptr;
 }
 
 
+/// Copy assignment operator
+/// \param other tracker to copy
+/// \return the updated tracker
 Tracker &Tracker::operator=(Tracker const& other) {
     if (this != &other) {
         delete[] removed;
@@ -20,11 +26,15 @@ Tracker &Tracker::operator=(Tracker const& other) {
 }
 
 
+/// Destructor
 Tracker::~Tracker() {
     delete[] removed;
 }
 
 
+/// Getter for date indexer
+/// \param date date to search for
+/// \return the index of the date indexer (-1 if not found)
 int Tracker::getRemovedIndex(const Date &date) {
     for (int i = 0; i < capacity; i++) {
         if (removed[i].getDate() == date) {
@@ -35,6 +45,7 @@ int Tracker::getRemovedIndex(const Date &date) {
 }
 
 
+/// Add a slot for date indexer
 void Tracker::addSlotRemoved() {
     DateIndexer* temp = new DateIndexer[capacity + 1];
 
@@ -51,6 +62,9 @@ void Tracker::addSlotRemoved() {
 }
 
 
+/// Add a product
+/// \param product product to add
+/// \param dateRemoved date of removal of the product
 void Tracker::addRemoved(Product *product, const Date &dateRemoved) {
     if (product == nullptr) { return; }
     int index = getRemovedIndex(dateRemoved);
@@ -64,6 +78,12 @@ void Tracker::addRemoved(Product *product, const Date &dateRemoved) {
     removed[index].addProduct(product);
 }
 
+
+/// Search for stocked and removed products in date interval
+/// \param from beginning of date interval
+/// \param to end of date interval
+/// \param stocked dynamic size array to save stocked in
+/// \param cleanedUp dynamic size array to save removed in
 void Tracker::searchInInterval(Date const& from, Date const& to,
                       DynArray<Product*>& stocked, DynArray<Product*>& cleanedUp) {
     for (int i = 0; i < capacity; i++) {
@@ -80,4 +100,3 @@ void Tracker::searchInInterval(Date const& from, Date const& to,
         }
     }
 }
-
