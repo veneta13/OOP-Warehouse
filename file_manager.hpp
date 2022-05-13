@@ -5,6 +5,7 @@
 
 #include <string>
 
+///\brief File reader and writer for warehouse
 class FileManager {
 
     bool readWarehouseParams(std::istream& in, Warehouse& w);

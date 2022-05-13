@@ -1,19 +1,30 @@
 #include "file_manager.hpp"
 
+/// Default constructor
 FileManager::FileManager() {}
 
 
+/// Copy constructor
+/// \param other file manager to copy
 FileManager::FileManager(FileManager const& other) {}
 
 
+/// Copy assignment operator
+/// \param other file manager to copy
+/// \return the updated file manager
 FileManager& FileManager::operator=(FileManager const& other) {
     return *this;
 }
 
 
+/// Destructor
 FileManager::~FileManager() {}
 
 
+/// Read warehouse size parameters from file
+/// \param in filestream to read parameters from
+/// \param w warehouse to update
+/// \return if the reading was successful
 bool FileManager::readWarehouseParams(std::istream& in, Warehouse& w) {
     int num;
     in >> num;
@@ -39,6 +50,10 @@ bool FileManager::readWarehouseParams(std::istream& in, Warehouse& w) {
 }
 
 
+/// Read products from file and save in warehouse
+/// \param in filestream to read products from
+/// \param w warehouse to update
+/// \return if the reading was successful
 bool FileManager::readWarehouseProducts(std::istream& in, Warehouse& w) {
     bool ok = true;
     while (!in.eof() && ok) {
@@ -48,6 +63,10 @@ bool FileManager::readWarehouseProducts(std::istream& in, Warehouse& w) {
 }
 
 
+/// Read product and save in warehouse
+/// \param in filestream to read product from
+/// \param w warehouse to update
+/// \return if the product was saves successfully
 bool FileManager::readProduct(std::istream& in, Warehouse& w) {
     Product p;
     std::string str;
@@ -91,6 +110,9 @@ bool FileManager::readProduct(std::istream& in, Warehouse& w) {
 }
 
 
+/// Write warehouse parameters in file
+/// \param out filestream to write to
+/// \param w warehouse to get parameters from
 void FileManager::writeWarehouseParams(std::ostream& out, Warehouse& w) const {
     out << w.getCapacity() << "\n";
 
@@ -110,6 +132,9 @@ void FileManager::writeWarehouseParams(std::ostream& out, Warehouse& w) const {
 }
 
 
+/// Write warehouse products in file
+/// \param out filestream to write to
+/// \param w warehouse to get products from
 void FileManager::writeWarehouseProducts(std::ostream& out, Warehouse& w) const {
     for (int i = 0; i < w.getCapacity(); i++) {
         for (int j = 0; j < w[i].getCapacity(); j++) {
@@ -123,6 +148,9 @@ void FileManager::writeWarehouseProducts(std::ostream& out, Warehouse& w) const 
 }
 
 
+/// Write product in file
+/// \param out filestream to write to
+/// \param product product to write
 void FileManager::writeProduct(std::ostream& out, Product const& product) const {
     out << product.getName() << "\n"
         << product.getManufacturer() << "\n"
@@ -140,11 +168,18 @@ void FileManager::writeProduct(std::ostream& out, Product const& product) const 
 }
 
 
+/// Read warehouse from file
+/// \param in filestream to read from
+/// \param w warehouse to update
+/// \return if the update was successful
 bool FileManager::readFile(std::istream& in, Warehouse& w) {
     return readWarehouseParams(in, w) && readWarehouseProducts(in, w);
 }
 
 
+/// Save warehouse in file
+/// \param out filestream to write to
+/// \param w warehouse to save
 void FileManager::writeFile(std::ostream& out, Warehouse& w) {
     writeWarehouseParams(out, w);
     writeWarehouseProducts(out, w);
