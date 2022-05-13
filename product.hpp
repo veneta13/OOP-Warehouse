@@ -5,16 +5,27 @@
 #include "placement.hpp"
 #include <cstring>
 
+///\brief Product batch representation
 class Product {
+    /// The name of the product
     char* name = nullptr;
+
+    /// The name of the product manufacturer
     char* manufacturer = nullptr;
+
+    /// A comment
     char* comment = nullptr;
 
+    /// The quantity of the product batch
     int quantity;
 
+    /// The batch expiration date
     Date expirationDate;
+
+    /// The batch stocked date
     Date stockedDate;
 
+    /// The batch placement in the warehouse
     Placement placement;
 
 public:
