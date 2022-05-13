@@ -4,10 +4,15 @@
 #include "tracker.hpp"
 #include "section.hpp"
 
+///\brief Represents the warehouse
 class Warehouse : public Container {
+    /// Tracker for the products removed from warehouse
     Tracker* tracker;
+
+    /// Today's date
     Date today;
 
+    /// The sections in the warehouse
     Section* sections;
 
     void copySections(Section* others);

@@ -1,5 +1,6 @@
 #include "warehouse.hpp"
 
+/// Default constructor
 Warehouse::Warehouse() : Container(0) {
     today = Date();
     tracker = new Tracker;
@@ -7,6 +8,8 @@ Warehouse::Warehouse() : Container(0) {
 }
 
 
+/// Constructor with capacity parameter
+/// \param capacity amount of shelves in section
 Warehouse::Warehouse(int capacity) : Container(capacity) {
     today = Date();
     tracker = new Tracker;
@@ -14,6 +17,8 @@ Warehouse::Warehouse(int capacity) : Container(capacity) {
 }
 
 
+/// Copy constructor
+/// \param other warehouse to copy
 Warehouse::Warehouse(Warehouse const& other) : Container(other.capacity) {
     tracker = nullptr;
     today = other.today;
@@ -23,6 +28,9 @@ Warehouse::Warehouse(Warehouse const& other) : Container(other.capacity) {
 }
 
 
+/// Copy assignment operator
+/// \param other warehouse to copy
+/// \return the updated warehouse
 Warehouse& Warehouse::operator=(Warehouse const& other) {
     if (this != &other) {
         delete tracker;
@@ -37,6 +45,7 @@ Warehouse& Warehouse::operator=(Warehouse const& other) {
 }
 
 
+/// Destructor
 Warehouse::~Warehouse() {
     capacity = 0;
     delete tracker;
@@ -45,6 +54,8 @@ Warehouse::~Warehouse() {
 }
 
 
+/// Copy sections
+/// \param others sections to copy
 void Warehouse::copySections(Section* others) {
     for (int i = 0; i < capacity; i++) {
         sections[i] = others[i];
@@ -52,6 +63,9 @@ void Warehouse::copySections(Section* others) {
 }
 
 
+/// Print products
+/// \param out output stream
+/// \param products products to output
 void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) const {
     for (int i = 0; i < products.size(); i++) {
         out << *products[i] << "\n";
@@ -59,6 +73,9 @@ void Warehouse::printProducts(std::ostream& out, DynArray<Product*>& products) c
 }
 
 
+/// Sort products by expiration date and count amount
+/// \param products products to sort and count
+/// \return sum of the quantities of the products
 int Warehouse::sortAndCount(DynArray<Product*> products) const {
     if (products.size() == 0) {
         return 0;
@@ -80,6 +97,12 @@ int Warehouse::sortAndCount(DynArray<Product*> products) const {
 }
 
 
+/// Output prompt if the user wants to remove more than the available quantity of a product
+/// \param out output stream to write the prompt in
+/// \param in input stream to read user input from
+/// \param productCount available quantity
+/// \param products available products
+/// \return if the available products should be kept
 bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int productCount,
                                      DynArray<Product*>& products) const {
     char response;
@@ -93,20 +116,33 @@ bool Warehouse::insufficientQuantity(std::ostream& out, std::istream& in, int pr
     return true;
 }
 
+
+/// Getter for sections
+/// \param index index of the section
+/// \return the section at index
 Section& Warehouse::operator[](int index) {
     return sections[index];
 }
 
 
+/// Setter for today
+/// \param date date to set
 void Warehouse::setToday(const Date &date) {
     today = date;
 }
 
 
+/// Getter for today
+/// \return today's date
 Date* Warehouse::getToday() {
     return &today;
 }
 
+
+/// Setter for section capacity
+/// \param index index of the section
+/// \param sectionCapacity capacity to set
+/// \return if the setting was successful
 bool Warehouse::setSectionCapacity(int index, int sectionCapacity) {
     if (index < 0 || index > capacity - 1) { return false; }
     sections[index] = Section(sectionCapacity);
@@ -114,6 +150,10 @@ bool Warehouse::setSectionCapacity(int index, int sectionCapacity) {
 }
 
 
+/// Find product by name and expiration date
+/// \param name name to search for
+/// \param date expiration date to search for
+/// \return pointer to the product
 Product* Warehouse::findEqual(char const* name, Date const& date) {
     Product* found = nullptr;
     for (int i = 0; i < capacity && !found; i++) {
@@ -123,6 +163,9 @@ Product* Warehouse::findEqual(char const* name, Date const& date) {
 }
 
 
+/// Find all products with name
+/// \param name name to search for
+/// \param results dynamic size array to save found products in
 void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllByName(name, results);
@@ -130,6 +173,9 @@ void Warehouse::findAllByName(const char* name, DynArray<Product*>& results) con
 }
 
 
+/// Find all products by expiration date
+/// \param date expiration date to search for
+/// \param results dynamic size array to save found products in
 void Warehouse::findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllExpiredByDate(date, results);
@@ -137,6 +183,10 @@ void Warehouse::findAllExpiredByDate(Date const& date, DynArray<Product*>& resul
 }
 
 
+/// Find all products stocked between dates
+/// \param from beginning of date interval
+/// \param to end of date interval
+/// \param results dynamic size array to save found products in
 void Warehouse::findAllStockedBetweenDates(Date const& from, Date const& to, DynArray<Product*> &results) const {
     for (int i = 0; i < capacity; i++) {
         sections[i].findAllStockedBetweenDates(from, to, results);
@@ -144,6 +194,9 @@ void Warehouse::findAllStockedBetweenDates(Date const& from, Date const& to, Dyn
 }
 
 
+/// Add product somewhere in warehouse
+/// \param product product to add
+/// \return if placement is successful
 bool Warehouse::addProduct(Product const& product) {
     for (int i = 0; i < capacity; i++) {
         Placement p = sections[i].addProduct(product);
@@ -157,12 +210,13 @@ bool Warehouse::addProduct(Product const& product) {
     return false;
 }
 
-///
-/// \param sectionIndex the section we want to remove the project from
-/// \param shelfIndex the shelf we want to remove the project from
-/// \param index the index of the product we want to remove
-/// \param quantity the quantity to remove
-/// \return the removed product (if the removal is unsuccessful -> nullptr)
+
+/// Remove product from a set position
+/// \param sectionIndex index of section to remove from
+/// \param shelfIndex index of shelf to remove from
+/// \param index index of the product to remove
+/// \param quantity quantity to remove
+/// \return the removed product (nullptr if unsuccessful)
 Product* Warehouse::removeProduct(int sectionIndex, int shelfIndex, int index, int quantity) {
     if (sectionIndex > capacity - 1 || sectionIndex < 0) {
         return nullptr;
@@ -172,6 +226,12 @@ Product* Warehouse::removeProduct(int sectionIndex, int shelfIndex, int index, i
 }
 
 
+/// Take out product from warehouse
+/// \param out output stream to write the prompt in
+/// \param in input stream to read user input from
+/// \param name name of product
+/// \param wanted quantity to take out
+/// \return if product was taken out successfully
 bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* name, int wanted) {
     DynArray<Product*> products(10);
     findAllByName(name, products);
@@ -199,6 +259,12 @@ bool Warehouse::takeOutProduct(std::ostream& out, std::istream& in, char const* 
 }
 
 
+/// Add product at a set position
+/// \param product product to add
+/// \param sectionIndex section to add in
+/// \param shelfIndex shelf to add on
+/// \param index index to add at
+/// \return if the product was added successfully
 bool Warehouse::addProduct(Product const& product, int sectionIndex, int shelfIndex, int index) {
     if (sectionIndex < 0 || sectionIndex > capacity - 1) { return false; }
     if (sections[sectionIndex].addProduct(product, shelfIndex, index)) {
@@ -209,6 +275,9 @@ bool Warehouse::addProduct(Product const& product, int sectionIndex, int shelfIn
 }
 
 
+/// Add product in warehouse as close to a similar product as possible
+/// \param product product to add
+/// \return if the product was added successfully
 bool Warehouse::restock(Product const& product) {
     Product* found = findEqual(product.getName(), product.getExpirationDate());
 
@@ -259,6 +328,9 @@ bool Warehouse::restock(Product const& product) {
 }
 
 
+/// Cleanup expired and expiring products
+/// \param file filestream to save product information in
+/// \param date current date
 void Warehouse::cleanup(std::ostream& file, Date const& date) {
     DynArray<Product*> products(10);
     findAllExpiredByDate(date, products);
@@ -271,6 +343,10 @@ void Warehouse::cleanup(std::ostream& file, Date const& date) {
 }
 
 
+/// Stream insertion operator
+/// \param out output stream
+/// \param w warehouse to output
+/// \return the stream with products inserted
 std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
     DynArray<Product *> listed(10);
 
@@ -295,7 +371,7 @@ std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
                     int count = w.sortAndCount(products);
 
                     w.printProducts(out, products);
-                    out << "\n----- COUNT: " << count << "\n";
+                    out << "---------- COUNT: " << count << "\n\n";
                 }
             }
         }
@@ -305,6 +381,10 @@ std::ostream& operator<<(std::ostream& out, Warehouse const& w) {
 }
 
 
+/// List all products stocked and taken out in a date interval
+/// \param out output stream
+/// \param from beginning of date interval
+/// \param to end of date interval
 void Warehouse::makeQuery(std::ostream& out, Date const& from, Date const& to) {
     DynArray<Product *> stocked(5);
     DynArray<Product *> removed(5);
