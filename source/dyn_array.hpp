@@ -1,7 +1,7 @@
 #ifndef __DYN_ARRAY
 #define __DYN_ARRAY
 
-/// Dynamic size array template
+/// \brief Dynamic size array template
 /// \tparam T type of objects saved in array
 template <class T>
 class DynArray {

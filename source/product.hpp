@@ -5,7 +5,7 @@
 #include "placement.hpp"
 #include <cstring>
 
-///\brief Product batch representation
+///\brief Represents a product batch
 class Product {
     /// The name of the product
     char* name = nullptr;

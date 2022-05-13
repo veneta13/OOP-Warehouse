@@ -4,7 +4,7 @@
 Container::Container() : capacity(0) {}
 
 
-/// /// Constructor with parameters
+/// Constructor with parameters
 /// \param capacity the capacity of the container
 Container::Container(int capacity) : capacity(capacity) {}
 
