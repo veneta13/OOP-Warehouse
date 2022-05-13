@@ -1395,7 +1395,7 @@ TEST_CASE("Warehouse tests")
         "INDEX: 1 SHELF: 0 SECTION: 1\n"
         "EXP: 1/2/2021 STOCK: 1/2/2021\n"
         "NOTES: This is a dummy comment\n"
-        "\n----- COUNT: 8\n";
+        "---------- COUNT: 8\n\n";
 
         std::stringstream out;
         out << w1;
