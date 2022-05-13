@@ -173,7 +173,7 @@ bool Date::isValid() const {
 /// Stream insertion operator
 /// \param out output stream
 /// \param d date
-/// \return the stream with date put in
+/// \return the stream with date inserted
 std::ostream& operator<<(std::ostream& out, Date const& d) {
     out << d.day << "/" << d.month << "/" << d.year;
     return out;
