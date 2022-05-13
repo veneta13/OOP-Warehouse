@@ -1856,8 +1856,8 @@ TEST_CASE("File manager tests")
         REQUIRE(w1.addProduct(p2, 2, 1, 0));
 
         const char* answer = "3\n"
-        "1 2 2 \n"
-        "3 1 2 2 1 \n"
+        " 1 2 2\n"
+        " 3 1 2 2 1\n"
         "dummy Name1\n"
         "dummy Manufacturer1\n"
         "5\n"
