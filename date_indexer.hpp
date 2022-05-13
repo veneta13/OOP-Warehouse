@@ -5,9 +5,15 @@
 #include "product.hpp"
 #include "container.hpp"
 
+///\brief Contain dates removed on a specific date from the warehouse
 class DateIndexer : public Container {
+    /// Date of removal
     Date date;
+
+    /// The quantity of the products in indexer
     int productCount;
+
+    /// Product pointers
     Product** products;
 
     void resize();
