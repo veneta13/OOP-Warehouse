@@ -52,6 +52,7 @@ void Tracker::addSlotRemoved() {
 
 
 void Tracker::addRemoved(Product *product, const Date &dateRemoved) {
+    if (product == nullptr) { return; }
     int index = getRemovedIndex(dateRemoved);
     if (index == -1) {
         addSlotRemoved();
