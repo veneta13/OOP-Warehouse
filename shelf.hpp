@@ -3,7 +3,9 @@
 
 #include "container.hpp"
 
+///\brief Represents a shelf in the warehouse
 class Shelf : public Container {
+    /// The products on the shelf
     Product* products;
 
     void copyProducts(Product* others);
