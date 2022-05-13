@@ -1,10 +1,17 @@
 #ifndef __DYN_ARRAY
 #define __DYN_ARRAY
 
+/// Dynamic size array template
+/// \tparam T type of objects saved in array
 template <class T>
 class DynArray {
+    /// The amount of objects currently saved
     int count;
+
+    /// The current max capacity
     int capacity;
+
+    /// The elements currently saved
     T* elements;
 
     void doubleSpace();

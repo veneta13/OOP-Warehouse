@@ -1,6 +1,9 @@
 #include "dyn_array.hpp"
 #include "product.hpp"
 
+/// Constructor with capacity parameter
+/// \tparam T type of objects saved in array
+/// \param capacity the start capacity
 template<class T>
 DynArray<T>::DynArray(int capacity) : capacity(capacity) {
     elements = new T[capacity];
@@ -8,6 +11,9 @@ DynArray<T>::DynArray(int capacity) : capacity(capacity) {
 }
 
 
+/// Copy constructor
+/// \tparam T type of objects saved in array
+/// \param other array to copy
 template<class T>
 DynArray<T>::DynArray(const DynArray<T>& other) {
     elements = nullptr;
@@ -15,6 +21,10 @@ DynArray<T>::DynArray(const DynArray<T>& other) {
 }
 
 
+/// Copy assignment operator
+/// \tparam T type of objects saved in array
+/// \param other array to copy
+/// \return the updated array
 template<class T>
 DynArray<T>& DynArray<T>::operator=(const DynArray<T>& other) {
     if (this != &other) {
@@ -24,12 +34,16 @@ DynArray<T>& DynArray<T>::operator=(const DynArray<T>& other) {
 }
 
 
+/// Destructor
+/// \tparam T type of objects saved in array
 template <class T>
 DynArray<T>::~DynArray() {
     clear();
 }
 
 
+/// Double the capacity of the array
+/// \tparam T type of objects saved in array
 template <class T>
 void DynArray<T>::doubleSpace() {
     capacity *= 2;
@@ -44,6 +58,9 @@ void DynArray<T>::doubleSpace() {
 }
 
 
+/// Copy array elements
+/// \tparam T type of objects saved in array
+/// \param other array to be copied
 template <class T>
 void DynArray<T>::copyOther(const DynArray<T>& other) {
     clear();
@@ -58,6 +75,8 @@ void DynArray<T>::copyOther(const DynArray<T>& other) {
 }
 
 
+/// Clear elements
+/// \tparam T type of objects saved in array
 template <class T>
 void DynArray<T>::clear() {
     delete[] elements;
@@ -66,12 +85,20 @@ void DynArray<T>::clear() {
 }
 
 
+/// Getter for array element
+/// \tparam T type of objects saved in array
+/// \param index the index to get element from
+/// \return element at index
 template <class T>
 T& DynArray<T>::operator[](int index) {
     return elements[index];
 }
 
 
+/// Insert element at index
+/// \tparam T type of objects saved in array
+/// \param element element to insert
+/// \param index index to insert the element at
 template <class T>
 void DynArray<T>::insert(T element, int index) {
     if (index > capacity - 1) { return; }
@@ -89,6 +116,9 @@ void DynArray<T>::insert(T element, int index) {
 }
 
 
+/// Push element at the end of array
+/// \tparam T type of objects saved in array
+/// \param element element to push
 template <class T>
 void DynArray<T>::push(T element) {
     if (count == capacity) {
@@ -99,6 +129,9 @@ void DynArray<T>::push(T element) {
 }
 
 
+/// Erase element at index
+/// \tparam T type of objects saved in array
+/// \param index index to erase element from
 template<class T>
 void DynArray<T>::erase(int index) {
     if (index > capacity - 1) { return; }
@@ -110,17 +143,28 @@ void DynArray<T>::erase(int index) {
 }
 
 
+/// Remove last element
+/// \tparam T type of objects saved in array
 template <class T>
 void DynArray<T>::pop() {
     count--;
 }
 
 
+/// Getter for size
+/// \tparam T type of objects saved in array
+/// \return the count of elements saved in array
 template <class T>
 int DynArray<T>::size() const {
     return count;
 }
 
+
+/// Swap elements
+/// \tparam T type of objects saved in array
+/// \param a index of the first element
+/// \param b index of the second element
+/// \return if the swap was successful
 template<class T>
 bool DynArray<T>::swap(int a, int b) {
     if (a < 0 || b < 0 || a > count - 1 || b > count - 1) {
