@@ -3,7 +3,9 @@
 
 #include "shelf.hpp"
 
+///\brief Represents a section in the warehouse
 class Section : public Container {
+    /// The shelves in the section
     Shelf* shelves;
 
     void copyShelves(Shelf* others);
