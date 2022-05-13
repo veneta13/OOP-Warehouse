@@ -7,7 +7,7 @@ Section::Section() : Container(0) {
 
 
 /// Constructor with capacity parameter
-/// \param capacity The amount of shelves in the section
+/// \param capacity amount of shelves in section
 Section::Section(int capacity) : Container(capacity) {
     shelves = new Shelf[capacity];
 }
@@ -107,7 +107,7 @@ void Section::findAllByName(const char* name, DynArray<Product*>& results) const
 
 
 /// Find all products by expiration date
-/// \param name expiration date to search for
+/// \param date expiration date to search for
 /// \param results dynamic size array to save found products in
 void Section::findAllExpiredByDate(Date const& date, DynArray<Product*>& results) const {
     for (int i = 0; i < capacity; i++) {
