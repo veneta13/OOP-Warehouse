@@ -213,6 +213,8 @@ void Executor::cleanup(std::ostream& out, std::istream& in) {
 
     warehouse->cleanup(file, date);
     out << "Cleanup successful!\n";
+
+    file.close();
 }
 
 
@@ -234,6 +236,8 @@ void Executor::load(std::ostream& out, std::istream& in) {
 
     fileManager.readFile(file, *warehouse);
     out << "\nFile read successfully!\n";
+
+    file.close();
 }
 
 
@@ -255,6 +259,8 @@ void Executor::save(std::ostream& out, std::istream& in) {
 
     fileManager.writeFile(file, *warehouse);
     out << "\nWarehouse saved successfully!\n";
+
+    file.close();
 }
 
 
