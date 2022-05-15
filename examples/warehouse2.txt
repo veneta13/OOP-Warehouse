@@ -1,0 +1,24 @@
+3
+ 1 2 3
+ 5 4 6 2 3 3
+Product 1
+Manufacturer 1
+5
+0 0 2
+2 2 2022
+1 1 2022
+Comment 1
+Product 2
+Manufacturer 2
+9
+0 0 0
+1 3 2022
+2 1 2022
+Comment 2
+Product 3
+Manufacturer 1
+8
+2 0 0
+1 3 2022
+20 2 2022
+Another product
