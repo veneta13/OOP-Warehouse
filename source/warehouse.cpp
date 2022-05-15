@@ -293,19 +293,19 @@ bool Warehouse::restock(Product const& product) {
         }
 
         // Place on the same shelf
-        pNew = sections[p.section, p.shelf].addProduct(product);
+        pNew = sections[p.section][p.shelf].addProduct(product);
         if (pNew.index != -1) {
             sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
             return true;
         }
 
         // Place on close by shelves in the same section
-        pNew = sections[p.section, p.shelf + 1].addProduct(product);
+        pNew = sections[p.section][p.shelf + 1].addProduct(product);
         if (pNew.index != -1) {
             sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
             return true;
         }
-        pNew = sections[p.section, p.shelf - 1].addProduct(product);
+        pNew = sections[p.section][p.shelf - 1].addProduct(product);
         if (pNew.index != -1) {
             sections[pNew.section][pNew.shelf][pNew.index].setPlacement(pNew);
             return true;
