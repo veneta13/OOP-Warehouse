@@ -14,7 +14,7 @@ The following information is stored for each product:
 - _date of entry_ into the warehouse
 - _manufacturer's name_
 - _available quantity_
-- _location_ (incl. section, shelf, position on shelf) (*)
+- _location_ (incl. section, shelf, position on shelf)
 - _comment_ (arbitrary text)
 
 
